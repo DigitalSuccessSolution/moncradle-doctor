@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   HeartPulse,
@@ -207,18 +208,18 @@ export default function LandingPage() {
               priority
             />
             {/* Colorful Soft Gradient Overlay on Left */}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-50/95 via-pink-50/80 to-transparent w-full md:w-[65%]" />
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-50/95 via-sky-50/80 to-transparent w-full md:w-[65%]" />
             
             {/* Playful Pediatric Blobs */}
-            <div className="absolute top-[-10%] left-[-5%] w-96 h-96 bg-pink-300/30 rounded-full blur-[100px] pointer-events-none" />
-            <div className="absolute bottom-[-10%] left-[20%] w-80 h-80 bg-sky-300/30 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute top-[-10%] left-[-5%] w-96 h-96 bg-sky-300/30 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-[-10%] left-[20%] w-80 h-80 bg-indigo-300/30 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute top-[30%] right-[30%] w-72 h-72 bg-emerald-200/20 rounded-full blur-[90px] pointer-events-none hidden md:block" />
           </div>
 
           {/* Aligned Inner Overlay Content */}
           <div className="relative z-10 max-w-7xl mx-auto px-8 w-full py-12">
             <div className="max-w-2xl space-y-6">
-              <span className="inline-flex items-center gap-1.5 bg-pink-100 text-pink-700 font-semibold text-xs px-4 py-1.5 rounded-full border border-pink-200 shadow-sm">
+              <span className="inline-flex items-center gap-1.5 bg-sky-100 text-[#1E4E70] font-semibold text-xs px-4 py-1.5 rounded-full border border-sky-200 shadow-sm">
                 👶 For Pediatricians & Nutritionists
               </span>
 
@@ -288,16 +289,22 @@ export default function LandingPage() {
         </section>
 
         {/* TRUSTED BY THOUSANDS OF PARENTS & PEDIATRICIANS BAR */}
-        <section className="py-10 border-y border-slate-200/80 bg-white">
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
+          className="py-10 border-y border-slate-200/80 bg-white"
+        >
           <div className="max-w-7xl mx-auto px-8 space-y-8 text-center">
             <p className="text-xs font-semibold text-[#1E4E70] uppercase tracking-widest">
               Trusted by Thousands of Parents & Leading Pediatricians
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-              <div className="p-5 rounded-xl bg-pink-50 border border-pink-100 shadow-2xs space-y-1 hover:shadow-md hover:border-pink-300 transition-all transform hover:-translate-y-1">
-                <p className="text-3xl font-bold text-pink-600">50k+</p>
-                <p className="text-xs font-semibold text-pink-800">Happy Parents</p>
+              <div className="p-5 rounded-xl bg-indigo-50 border border-indigo-100 shadow-2xs space-y-1 hover:shadow-md hover:border-indigo-300 transition-all transform hover:-translate-y-1">
+                <p className="text-3xl font-bold text-indigo-600">50k+</p>
+                <p className="text-xs font-semibold text-indigo-800">Happy Parents</p>
               </div>
 
               <div className="p-5 rounded-xl bg-emerald-50 border border-emerald-100 shadow-2xs space-y-1 hover:shadow-md hover:border-emerald-300 transition-all transform hover:-translate-y-1">
@@ -316,10 +323,17 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* SECTION: WHY DOCTORS CHOOSE MONCRADEL (6 FEATURE CARDS GRID) */}
-        <section id="features" className="py-20 max-w-7xl mx-auto px-8 space-y-12">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          id="features" 
+          className="py-20 max-w-5xl mx-auto px-8 space-y-12"
+        >
           <div className="text-center space-y-2 max-w-xl mx-auto">
             <span className="text-xs font-semibold text-[#1E4E70] uppercase tracking-widest">WHY DOCTORS CHOOSE MONCRADEL</span>
             <h2 className="text-3xl xl:text-4xl font-semibold text-slate-800 tracking-tight">
@@ -460,30 +474,42 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* SECTION: BUILT FOR DOCTORS */}
-        <section id="built-for-doctors" className="py-16 bg-white border-y border-slate-200/80">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          id="built-for-doctors" 
+          className="py-16 bg-white border-y border-slate-200/80"
+        >
           <div className="max-w-7xl mx-auto px-8 grid grid-cols-12 gap-12 items-center">
-            {/* Left Graphic: Male Doctor Working on Laptop */}
-            <div className="col-span-12 lg:col-span-6 relative flex justify-center">
-              <div className="relative w-full max-w-md h-96 overflow-hidden border-4 border-white">
+            {/* Left Graphic: Female Doctor */}
+            <div className="col-span-12 lg:col-span-6 relative flex justify-center items-end min-h-[480px]">
+              {/* Colorful Background Decorative Circle */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-tr from-sky-200 to-indigo-100 rounded-full blur-2xl opacity-60 pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[#1E4E70]/5 rounded-full border border-sky-200 shadow-inner pointer-events-none" />
+              
+              <div className="relative w-full max-w-md h-full min-h-[480px]">
                 <Image
                   src="/doctor_female.png"
-                  alt="Moncradel Doctor Working on Laptop"
+                  alt="Moncradel Pediatrician"
                   fill
-                  className="object-cover"
+                  className="object-contain object-bottom drop-shadow-lg"
+                  unoptimized
                 />
 
                 {/* Floating Card 1: BMI 16.2 Normal */}
-                <div className="absolute top-6 right-6 bg-white/95 backdrop-blur-md rounded-lg p-3 shadow-xl border border-slate-100 text-center w-28">
+                <div className="absolute top-12 right-2 bg-white/95 backdrop-blur-md rounded-lg p-3 shadow-xl border border-slate-100 text-center w-28 z-10">
                   <p className="text-[10px] text-slate-400 font-semibold uppercase">BMI</p>
                   <p className="text-lg font-semibold text-slate-900">16.2</p>
                   <p className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1 py-0.5 rounded">Normal</p>
                 </div>
 
                 {/* Floating Card 2: Upcoming Consultation */}
-                <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-md rounded-lg p-3.5 shadow-xl border border-slate-100 flex items-center gap-3">
+                <div className="absolute bottom-10 left-2 bg-white/95 backdrop-blur-md rounded-lg p-3.5 shadow-xl border border-slate-100 flex items-center gap-3 z-10">
                   <div className="w-8 h-8 rounded-xl bg-[#A5D8FF]/30 text-[#1E4E70] flex items-center justify-center shrink-0">
                     <Calendar className="w-4 h-4" />
                   </div>
@@ -538,10 +564,17 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* SECTION: OUR PLATFORM */}
-        <section id="our-platform" className="py-20 max-w-7xl mx-auto px-8 space-y-12">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          id="our-platform" 
+          className="py-20 max-w-7xl mx-auto px-8 space-y-12"
+        >
           <div className="text-center space-y-2 max-w-xl mx-auto">
             <span className="text-xs font-semibold text-[#1E4E70] uppercase tracking-widest">OUR PLATFORM</span>
             <h2 className="text-3xl xl:text-4xl font-semibold text-slate-800 tracking-tight">
@@ -635,10 +668,16 @@ export default function LandingPage() {
               </button>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* FOOTER CTA BANNER */}
-        <section className="px-8 max-w-7xl mx-auto my-8">
+        <motion.section 
+          initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+          whileInView={{ opacity: 1, scale: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5 }}
+          className="px-8 max-w-7xl mx-auto my-8"
+        >
           <div className="bg-[#5B61F4] rounded-xl p-8 xl:p-10 text-white shadow-2xl flex items-center justify-between relative overflow-hidden">
             {/* Background Heart Watermark Accents */}
             <div className="absolute inset-0 opacity-10 flex items-center justify-around pointer-events-none">
@@ -708,7 +747,7 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* FOOTER */}
         <footer id="footer" className="bg-[#1D1D1F] text-slate-300 pt-16 pb-12 px-8">
