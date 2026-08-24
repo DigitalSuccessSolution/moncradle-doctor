@@ -170,7 +170,7 @@ export default function Dashboard() {
         {/* Appointments Card - Soft Baby Sky Blue */}
         <Link
           href="/appointments"
-          className="bg-[#F0F7FF] hover:bg-[#E0F0FF] text-left p-5 rounded-xl transition-colors group cursor-pointer flex flex-col justify-between min-h-[140px] border border-[#BEE0FF]/40 block"
+          className="bg-gradient-to-br from-sky-100 to-blue-100 hover:from-sky-200 hover:to-blue-200 text-left p-5 rounded-3xl transition-all group cursor-pointer flex flex-col justify-between min-h-[140px] border border-sky-200 block"
         >
           <div className="mb-4">
             <Image
@@ -195,7 +195,7 @@ export default function Dashboard() {
         {/* Add Notes Card - Soft Baby Lavender */}
         <Link
           href="/prescriptions"
-          className="bg-[#FBF7FF] hover:bg-[#F3E8FF] text-left p-5 rounded-xl transition-colors group cursor-pointer flex flex-col justify-between min-h-[140px] border border-purple-200/30 block"
+          className="bg-gradient-to-br from-purple-100 to-fuchsia-100 hover:from-purple-200 hover:to-fuchsia-200 text-left p-5 rounded-3xl transition-all group cursor-pointer flex flex-col justify-between min-h-[140px] border border-purple-200 block"
         >
           <div className="mb-4">
             <Image
@@ -220,7 +220,7 @@ export default function Dashboard() {
         {/* Create Plan Card - Soft Baby Fresh Mint */}
         <Link
           href="/nutrition"
-          className="bg-[#F0FDF4] hover:bg-[#DCFCE7] text-left p-5 rounded-xl transition-colors group cursor-pointer flex flex-col justify-between min-h-[140px] border border-emerald-200/30 block"
+          className="bg-gradient-to-br from-emerald-100 to-teal-100 hover:from-emerald-200 hover:to-teal-200 text-left p-5 rounded-3xl transition-all group cursor-pointer flex flex-col justify-between min-h-[140px] border border-emerald-200 block"
         >
           <div className="mb-4">
             <Image
@@ -248,7 +248,7 @@ export default function Dashboard() {
         {/* Total Patients - Soft Baby Warm Peach */}
         <Link
           href="/patients"
-          className="bg-[#FFF7ED] hover:bg-[#FFEDD5] rounded-xl p-5 flex flex-col justify-between cursor-pointer transition-colors group min-h-[160px] border border-orange-200/30"
+          className="bg-gradient-to-br from-orange-100 to-amber-100 hover:from-orange-200 hover:to-amber-200 rounded-3xl p-5 flex flex-col justify-between cursor-pointer transition-all group min-h-[160px] border border-orange-200"
         >
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -276,7 +276,7 @@ export default function Dashboard() {
         {/* Today's Appts - Soft Baby Turquoise / Sky */}
         <Link
           href="/appointments"
-          className="bg-[#F0F9FF] hover:bg-[#E0F2FE] rounded-xl p-5 flex flex-col justify-between cursor-pointer transition-colors group min-h-[160px] border border-sky-200/30"
+          className="bg-gradient-to-br from-cyan-100 to-sky-100 hover:from-cyan-200 hover:to-sky-200 rounded-3xl p-5 flex flex-col justify-between cursor-pointer transition-all group min-h-[160px] border border-cyan-200"
         >
           <div className="flex items-center justify-between mb-4">
             <div>

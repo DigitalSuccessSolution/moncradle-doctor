@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   HeartPulse,
@@ -32,6 +33,8 @@ import {
   QrCode,
   Check,
   Home,
+  Zap,
+  LineChart,
 } from "lucide-react";
 import { useDoctorData } from "@/context/DoctorDataContext";
 import ApkDownloadModal from "@/components/ApkDownloadModal";
@@ -206,15 +209,20 @@ export default function LandingPage() {
               className="object-cover object-[right_top]"
               priority
             />
-            {/* Soft Gradient Overlay on Left for Flawless Text Readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent w-full md:w-[65%]" />
+            {/* Colorful Soft Gradient Overlay on Left */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-50/95 via-sky-50/80 to-transparent w-full md:w-[65%]" />
+            
+            {/* Playful Pediatric Blobs */}
+            <div className="absolute top-[-10%] left-[-5%] w-96 h-96 bg-sky-300/30 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-[-10%] left-[20%] w-80 h-80 bg-indigo-300/30 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute top-[30%] right-[30%] w-72 h-72 bg-emerald-200/20 rounded-full blur-[90px] pointer-events-none hidden md:block" />
           </div>
 
           {/* Aligned Inner Overlay Content */}
           <div className="relative z-10 max-w-7xl mx-auto px-8 w-full py-12">
             <div className="max-w-2xl space-y-6">
-              <span className="inline-flex items-center gap-1.5 bg-[#A5D8FF]/40 text-[#1E4E70] font-semibold text-xs px-4 py-1.5 rounded-full border border-[#A5D8FF]">
-                For Doctors & Nutritionists
+              <span className="inline-flex items-center gap-1.5 bg-sky-100 text-[#1E4E70] font-semibold text-xs px-4 py-1.5 rounded-full border border-sky-200 shadow-sm">
+                👶 For Pediatricians & Nutritionists
               </span>
 
               <h1 className="text-5xl xl:text-6xl font-semibold text-slate-800 tracking-tight leading-[1.1]">
@@ -283,38 +291,51 @@ export default function LandingPage() {
         </section>
 
         {/* TRUSTED BY THOUSANDS OF PARENTS & PEDIATRICIANS BAR */}
-        <section className="py-10 border-y border-slate-200/80 bg-white">
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
+          className="py-10 border-y border-slate-200/80 bg-white"
+        >
           <div className="max-w-7xl mx-auto px-8 space-y-8 text-center">
             <p className="text-xs font-semibold text-[#1E4E70] uppercase tracking-widest">
               Trusted by Thousands of Parents & Leading Pediatricians
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-              <div className="p-5 rounded-lg bg-[#F8F9FA] border border-slate-200/80 shadow-2xs space-y-1 hover:border-[#A5D8FF] transition-all">
-                <p className="text-3xl font-semibold text-[#1E4E70]">50,000+</p>
-                <p className="text-xs font-semibold text-slate-700">Active Parents Enrolled</p>
+              <div className="p-5 rounded-xl bg-indigo-50 border border-indigo-100 shadow-2xs space-y-1 hover:shadow-md hover:border-indigo-300 transition-all transform hover:-translate-y-1">
+                <p className="text-3xl font-bold text-indigo-600">50k+</p>
+                <p className="text-xs font-semibold text-indigo-800">Happy Parents</p>
               </div>
 
-              <div className="p-5 rounded-lg bg-[#F8F9FA] border border-slate-200/80 shadow-2xs space-y-1 hover:border-[#A5D8FF] transition-all">
-                <p className="text-3xl font-semibold text-emerald-600">2,500+</p>
-                <p className="text-xs font-semibold text-slate-700">Verified Pediatricians</p>
+              <div className="p-5 rounded-xl bg-emerald-50 border border-emerald-100 shadow-2xs space-y-1 hover:shadow-md hover:border-emerald-300 transition-all transform hover:-translate-y-1">
+                <p className="text-3xl font-bold text-emerald-600">2,500+</p>
+                <p className="text-xs font-semibold text-emerald-800">Verified Doctors</p>
               </div>
 
-              <div className="p-5 rounded-lg bg-[#F8F9FA] border border-slate-200/80 shadow-2xs space-y-1 hover:border-[#A5D8FF] transition-all">
-                <p className="text-3xl font-semibold text-[#1E4E70]">99.4%</p>
-                <p className="text-xs font-semibold text-slate-700">Growth Tracking Precision</p>
+              <div className="p-5 rounded-xl bg-sky-50 border border-sky-100 shadow-2xs space-y-1 hover:shadow-md hover:border-sky-300 transition-all transform hover:-translate-y-1">
+                <p className="text-3xl font-bold text-sky-600">99.4%</p>
+                <p className="text-xs font-semibold text-sky-800">Growth Precision</p>
               </div>
 
-              <div className="p-5 rounded-lg bg-[#F8F9FA] border border-slate-200/80 shadow-2xs space-y-1 hover:border-[#A5D8FF] transition-all">
-                <p className="text-3xl font-semibold text-amber-500">4.9 ★</p>
-                <p className="text-xs font-semibold text-slate-700">Parent Satisfaction Rate</p>
+              <div className="p-5 rounded-xl bg-amber-50 border border-amber-100 shadow-2xs space-y-1 hover:shadow-md hover:border-amber-300 transition-all transform hover:-translate-y-1">
+                <p className="text-3xl font-bold text-amber-500">4.9 ★</p>
+                <p className="text-xs font-semibold text-amber-800">App Rating</p>
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* SECTION: WHY DOCTORS CHOOSE MONCRADEL (6 FEATURE CARDS GRID) */}
-        <section id="features" className="py-20 max-w-7xl mx-auto px-8 space-y-12">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          id="features" 
+          className="py-20 max-w-5xl mx-auto px-8 space-y-12"
+        >
           <div className="text-center space-y-2 max-w-xl mx-auto">
             <span className="text-xs font-semibold text-[#1E4E70] uppercase tracking-widest">WHY DOCTORS CHOOSE MONCRADEL</span>
             <h2 className="text-3xl xl:text-4xl font-semibold text-slate-800 tracking-tight">
@@ -455,30 +476,42 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* SECTION: BUILT FOR DOCTORS */}
-        <section id="built-for-doctors" className="py-16 bg-white border-y border-slate-200/80">
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          id="built-for-doctors" 
+          className="py-16 bg-white border-y border-slate-200/80"
+        >
           <div className="max-w-7xl mx-auto px-8 grid grid-cols-12 gap-12 items-center">
-            {/* Left Graphic: Male Doctor Working on Laptop */}
-            <div className="col-span-12 lg:col-span-6 relative flex justify-center">
-              <div className="relative w-full max-w-md h-96 overflow-hidden border-4 border-white">
+            {/* Left Graphic: Female Doctor */}
+            <div className="col-span-12 lg:col-span-6 relative flex justify-center items-end min-h-[480px]">
+              {/* Colorful Background Decorative Circle */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-tr from-sky-200 to-indigo-100 rounded-full blur-2xl opacity-60 pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[#1E4E70]/5 rounded-full border border-sky-200 shadow-inner pointer-events-none" />
+              
+              <div className="relative w-full max-w-md h-full min-h-[480px]">
                 <Image
                   src="/doctor_female.png"
-                  alt="Moncradel Doctor Working on Laptop"
+                  alt="Moncradel Pediatrician"
                   fill
-                  className="object-cover"
+                  className="object-contain object-bottom drop-shadow-lg"
+                  unoptimized
                 />
 
                 {/* Floating Card 1: BMI 16.2 Normal */}
-                <div className="absolute top-6 right-6 bg-white/95 backdrop-blur-md rounded-lg p-3 shadow-xl border border-slate-100 text-center w-28">
+                <div className="absolute top-12 right-2 bg-white/95 backdrop-blur-md rounded-lg p-3 shadow-xl border border-slate-100 text-center w-28 z-10">
                   <p className="text-[10px] text-slate-400 font-semibold uppercase">BMI</p>
                   <p className="text-lg font-semibold text-slate-900">16.2</p>
                   <p className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1 py-0.5 rounded">Normal</p>
                 </div>
 
                 {/* Floating Card 2: Upcoming Consultation */}
-                <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-md rounded-lg p-3.5 shadow-xl border border-slate-100 flex items-center gap-3">
+                <div className="absolute bottom-10 left-2 bg-white/95 backdrop-blur-md rounded-lg p-3.5 shadow-xl border border-slate-100 flex items-center gap-3 z-10">
                   <div className="w-8 h-8 rounded-xl bg-[#A5D8FF]/30 text-[#1E4E70] flex items-center justify-center shrink-0">
                     <Calendar className="w-4 h-4" />
                   </div>
@@ -533,107 +566,87 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        {/* SECTION: OUR PLATFORM */}
-        <section id="our-platform" className="py-20 max-w-7xl mx-auto px-8 space-y-12">
+        {/* SECTION: DOCTOR GROWTH & FEATURES */}
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          id="our-platform" 
+          className="py-20 max-w-7xl mx-auto px-8 space-y-12"
+        >
           <div className="text-center space-y-2 max-w-xl mx-auto">
-            <span className="text-xs font-semibold text-[#1E4E70] uppercase tracking-widest">OUR PLATFORM</span>
+            <span className="text-xs font-semibold text-[#1E4E70] uppercase tracking-widest">GROW YOUR PRACTICE</span>
             <h2 className="text-3xl xl:text-4xl font-semibold text-slate-800 tracking-tight">
-              An Integrated Ecosystem for Better Care
+              Scale Your Clinic with Smart Tech
             </h2>
           </div>
 
-          <div className="grid grid-cols-5 gap-4">
-            {/* Card 1: Parent PWA */}
-            <div className="bg-[#A5D8FF]/25 p-6 rounded-xl border border-[#A5D8FF]/50 flex flex-col justify-between space-y-6 hover:shadow-md transition-all">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Card 1: 10x Practice Growth */}
+            <div className="bg-[#A5D8FF]/20 p-8 rounded-2xl border border-[#A5D8FF]/40 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all hover:-translate-y-1">
               <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-white text-[#1E4E70] flex items-center justify-center shadow-xs">
-                  <Users className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-white text-[#1E4E70] flex items-center justify-center shadow-sm">
+                  <TrendingUp className="w-6 h-6" />
                 </div>
-                <h3 className="font-semibold text-slate-900 text-base">Parent PWA</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Parents get personalized nutrition plans, reminders, and real-time updates.
+                <h3 className="font-semibold text-slate-900 text-lg">10x Practice Growth</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Attract more parents with a premium digital clinic experience and modern health tools.
                 </p>
               </div>
-              <button onClick={() => setShowLoginModal(true)} className="text-xs font-semibold text-[#1E4E70] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
-                <span>Learn more</span>
-                <span>→</span>
-              </button>
             </div>
 
-            {/* Card 2: Doctor Portal */}
-            <div className="bg-rose-50/80 p-6 rounded-xl border border-rose-100 flex flex-col justify-between space-y-6 hover:shadow-md transition-all">
+            {/* Card 2: Clinical Efficiency */}
+            <div className="bg-emerald-50/80 p-8 rounded-2xl border border-emerald-100 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all hover:-translate-y-1">
               <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-white text-rose-600 flex items-center justify-center shadow-xs">
-                  <HeartPulse className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-white text-emerald-600 flex items-center justify-center shadow-sm">
+                  <Zap className="w-6 h-6" />
                 </div>
-                <h3 className="font-semibold text-slate-900 text-base">Doctor Portal</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Manage patients, growth, prescriptions, and consultations seamlessly.
+                <h3 className="font-semibold text-slate-900 text-lg">Clinical Efficiency</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Save hours daily with automated WHO growth calculations and instant e-prescriptions.
                 </p>
               </div>
-              <button onClick={() => setShowLoginModal(true)} className="text-xs font-semibold text-[#1E4E70] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
-                <span>Learn more</span>
-                <span>→</span>
-              </button>
             </div>
 
-            {/* Card 3: Cloud Kitchen */}
-            <div className="bg-emerald-50/80 p-6 rounded-xl border border-emerald-100 flex flex-col justify-between space-y-6 hover:shadow-md transition-all">
+            {/* Card 3: Patient Retention */}
+            <div className="bg-purple-50/80 p-8 rounded-2xl border border-purple-100 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all hover:-translate-y-1">
               <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-white text-emerald-600 flex items-center justify-center shadow-xs">
-                  <ChefHat className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-white text-purple-600 flex items-center justify-center shadow-sm">
+                  <HeartPulse className="w-6 h-6" />
                 </div>
-                <h3 className="font-semibold text-slate-900 text-base">Cloud Kitchen</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Hygienic, age-appropriate meals prepared with expert nutritionists.
+                <h3 className="font-semibold text-slate-900 text-lg">Patient Retention</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Build lasting trust through automated follow-ups, vaccine reminders, and nutrition plans.
                 </p>
               </div>
-              <button onClick={() => setShowLoginModal(true)} className="text-xs font-semibold text-[#1E4E70] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
-                <span>Learn more</span>
-                <span>→</span>
-              </button>
             </div>
 
-            {/* Card 4: Delivery Partner */}
-            <div className="bg-purple-50/80 p-6 rounded-xl border border-purple-100 flex flex-col justify-between space-y-6 hover:shadow-md transition-all">
+            {/* Card 4: Data-Driven Care */}
+            <div className="bg-amber-50/80 p-8 rounded-2xl border border-amber-100 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all hover:-translate-y-1">
               <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-white text-purple-600 flex items-center justify-center shadow-xs">
-                  <Truck className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-white text-amber-600 flex items-center justify-center shadow-sm">
+                  <LineChart className="w-6 h-6" />
                 </div>
-                <h3 className="font-semibold text-slate-900 text-base">Delivery Partner</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Timely and safe delivery ensuring freshness at your doorstep.
+                <h3 className="font-semibold text-slate-900 text-lg">Data-Driven Care</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Make informed clinical decisions backed by comprehensive pediatric health records.
                 </p>
               </div>
-              <button onClick={() => setShowLoginModal(true)} className="text-xs font-semibold text-[#1E4E70] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
-                <span>Learn more</span>
-                <span>→</span>
-              </button>
-            </div>
-
-            {/* Card 5: Super Admin */}
-            <div className="bg-amber-50/80 p-6 rounded-xl border border-amber-100 flex flex-col justify-between space-y-6 hover:shadow-md transition-all">
-              <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-white text-amber-600 flex items-center justify-center shadow-xs">
-                  <ShieldCheck className="w-5 h-5" />
-                </div>
-                <h3 className="font-semibold text-slate-900 text-base">Super Admin</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Complete control, analytics, and management of the entire platform.
-                </p>
-              </div>
-              <button onClick={() => setShowLoginModal(true)} className="text-xs font-semibold text-[#1E4E70] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
-                <span>Learn more</span>
-                <span>→</span>
-              </button>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* FOOTER CTA BANNER */}
-        <section className="px-8 max-w-7xl mx-auto my-8">
+        <motion.section 
+          initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+          whileInView={{ opacity: 1, scale: 1, y: 0 }} 
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5 }}
+          className="px-8 max-w-7xl mx-auto my-8"
+        >
           <div className="bg-[#5B61F4] rounded-xl p-8 xl:p-10 text-white shadow-2xl flex items-center justify-between relative overflow-hidden">
             {/* Background Heart Watermark Accents */}
             <div className="absolute inset-0 opacity-10 flex items-center justify-around pointer-events-none">
@@ -703,17 +716,23 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* FOOTER */}
         <footer id="footer" className="bg-[#1D1D1F] text-slate-300 pt-16 pb-12 px-8">
           <div className="max-w-7xl mx-auto grid grid-cols-12 gap-8 pb-12 border-b border-slate-800 text-xs">
             <div className="col-span-4 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#1E4E70] text-white flex items-center justify-center font-semibold">
-                  <HeartPulse className="w-5 h-5" />
+                <div className="bg-white/95 px-3 py-1.5 rounded-xl shadow-sm inline-flex items-center">
+                  <Image
+                    src="/complete-logo.png"
+                    alt="Moncradel"
+                    width={150}
+                    height={42}
+                    className="h-8 w-auto object-contain"
+                    unoptimized
+                  />
                 </div>
-                <span className="font-semibold text-white text-lg tracking-tight">Moncradel Doctor</span>
               </div>
               <p className="text-slate-400 leading-relaxed">
                 Empowering pediatricians with WHO growth tracking, digital prescriptions, and personalized child nutrition plans.

@@ -34,7 +34,7 @@ export default function LoginModal() {
   const { showLoginModal, setShowLoginModal, login } = useDoctorData();
 
   // Mode Tabs: "register" | "login" | "forgot_password"
-  const [activeTab, setActiveTab] = useState<"login" | "register" | "forgot_password">("register");
+  const [activeTab, setActiveTab] = useState<"login" | "register" | "forgot_password">("login");
 
   // Registration steps: "details" | "otp"
   const [step, setStep] = useState<"details" | "otp">("details");
@@ -45,6 +45,7 @@ export default function LoginModal() {
   const [doctorPassword, setDoctorPassword] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState(["", "", "", ""]);
+  const [policyAccepted, setPolicyAccepted] = useState(false);
 
   // Sign In Form Fields
   const [signInEmail, setSignInEmail] = useState("");
@@ -602,13 +603,31 @@ export default function LoginModal() {
                     </div>
                   </div>
 
+                  {/* Privacy Policy Checkbox */}
+                  <div className="flex items-start gap-2 pt-1 pb-2">
+                    <input
+                      type="checkbox"
+                      id="policy-checkbox"
+                      checked={policyAccepted}
+                      onChange={(e) => setPolicyAccepted(e.target.checked)}
+                      className="mt-0.5 w-3.5 h-3.5 rounded border-slate-300 text-[#1E4E70] focus:ring-[#1E4E70] cursor-pointer"
+                      required
+                    />
+                    <label htmlFor="policy-checkbox" className="text-xs text-slate-600 leading-snug cursor-pointer select-none">
+                      I have read and agree to the{" "}
+                      <Link href="/terms-of-service" target="_blank" className="font-semibold text-[#1E4E70] hover:underline" onClick={(e) => e.stopPropagation()}>Terms of Service</Link>
+                      {" "}and{" "}
+                      <Link href="/privacy-policy" target="_blank" className="font-semibold text-[#1E4E70] hover:underline" onClick={(e) => e.stopPropagation()}>Privacy Policy</Link>.
+                    </label>
+                  </div>
+
                   {/* SEND OTP TO EMAIL BUTTON */}
                   <div className="pt-1.5">
                     <button
                       type="submit"
-                      disabled={loading || !doctorName.trim() || !doctorEmail.trim()}
+                      disabled={loading || !doctorName.trim() || !doctorEmail.trim() || !policyAccepted}
                       className={`w-full py-3.5 sm:py-4 rounded-xl font-semibold text-xs sm:text-sm transition-colors flex items-center justify-center gap-2 ${
-                        doctorName.trim() && doctorEmail.trim()
+                        doctorName.trim() && doctorEmail.trim() && policyAccepted
                           ? "bg-[#1E4E70] hover:bg-[#153852] text-white cursor-pointer active:scale-[0.98]"
                           : "bg-slate-100 text-slate-400 border border-slate-200/60 cursor-not-allowed"
                       }`}
@@ -733,6 +752,11 @@ export default function LoginModal() {
                     placeholder="dr.sumitsahu@moncradel.com"
                     value={signInEmail}
                     onChange={(e) => setSignInEmail(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && signInEmail.trim() && signInPassword.trim()) {
+                        handleEmailPasswordSignIn(e as any);
+                      }
+                    }}
                     className="w-full bg-[#F8FAFC] focus:bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1E4E70] focus:border-[#1E4E70] transition-colors"
                     required
                     autoFocus
@@ -749,6 +773,11 @@ export default function LoginModal() {
                     placeholder="••••••••"
                     value={signInPassword}
                     onChange={(e) => setSignInPassword(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && signInEmail.trim() && signInPassword.trim()) {
+                        handleEmailPasswordSignIn(e as any);
+                      }
+                    }}
                     className="w-full bg-[#F8FAFC] focus:bg-white border border-slate-200 rounded-xl pl-10 pr-10 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1E4E70] focus:border-[#1E4E70] transition-colors"
                     required
                   />

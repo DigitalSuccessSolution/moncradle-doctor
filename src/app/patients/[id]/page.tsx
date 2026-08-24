@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
@@ -63,9 +63,29 @@ export default function PatientProfilePage() {
 
   const [liveBaby, setLiveBaby] = useState<Patient | null>(null);
   const [showPrintModal, setShowPrintModal] = useState(false);
-  
+
   const initialTab = (searchParams.get("tab") as "profile" | "growth" | "prescriptions" | "nutrition" | "milestones") || "profile";
   const [activeTab, setActiveTab] = useState<"profile" | "growth" | "prescriptions" | "nutrition" | "milestones">(initialTab);
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to active tab on mobile and on mount
+  useEffect(() => {
+    if (tabsContainerRef.current) {
+      const activeTabElement = tabsContainerRef.current.querySelector(`#tab-${activeTab}`) as HTMLElement;
+      if (activeTabElement) {
+        const container = tabsContainerRef.current;
+        const scrollLeft = activeTabElement.offsetLeft - container.offsetLeft - (container.clientWidth / 2) + (activeTabElement.clientWidth / 2);
+        container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+      }
+    }
+  }, [activeTab]);
+
+  const handleTabChange = (tabId: "profile" | "growth" | "prescriptions" | "nutrition" | "milestones") => {
+    setActiveTab(tabId);
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set("tab", tabId);
+    window.history.replaceState({}, '', newUrl.toString());
+  };
 
   // Tab 2: Growth Records State
   const [growthRecords, setGrowthRecords] = useState<GrowthRecord[]>([]);
@@ -87,7 +107,7 @@ export default function PatientProfilePage() {
     isOpen: false,
     title: "",
     message: "",
-    onConfirm: () => {},
+    onConfirm: () => { },
   });
 
   // Tab 3: Prescription Composer State
@@ -230,7 +250,7 @@ export default function PatientProfilePage() {
         const id = typeof item.mealId === "string"
           ? item.mealId
           : (item.mealId?._id || item.mealId?.id || "");
-        
+
         // Find in local catalog
         const found = allMeals.find(m => (m._id || m.id) === id);
         if (found) {
@@ -241,7 +261,7 @@ export default function PatientProfilePage() {
             mealId: id,
           };
         }
-        
+
         // Fallback to populated object
         if (item.mealId && typeof item.mealId === "object") {
           return {
@@ -251,7 +271,7 @@ export default function PatientProfilePage() {
             mealId: id,
           };
         }
-        
+
         // Final fallback
         return {
           day: item.day,
@@ -494,9 +514,9 @@ export default function PatientProfilePage() {
     } catch (err: any) {
       console.error(err);
       if (err.message && err.message.includes("weeklySchedule: At least one meal must be scheduled")) {
-         setPlannerErrorMsg("At least one meal must be scheduled. You cannot save an empty plan.");
+        setPlannerErrorMsg("At least one meal must be scheduled. You cannot save an empty plan.");
       } else {
-         setPlannerErrorMsg(err.message || "An unexpected error occurred");
+        setPlannerErrorMsg(err.message || "An unexpected error occurred");
       }
       setTimeout(() => setPlannerErrorMsg(""), 5000);
     } finally {
@@ -651,10 +671,10 @@ export default function PatientProfilePage() {
       </div>
 
       {/* 2. Interactive Navigation Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 border-b border-slate-200/60 thin-scrollbar">
+      <div ref={tabsContainerRef} className="flex items-center gap-1.5 overflow-x-auto pb-2 border-b border-slate-200/60 thin-scrollbar scroll-smooth">
         {[
           { id: "profile", label: "Profile & Contacts", icon: User },
-          { id: "growth", label: "Growth Trajectory", icon: Scale },
+          { id: "growth", label: "Growth", icon: Scale },
           { id: "prescriptions", label: "Prescription Hub", icon: FileText },
           { id: "nutrition", label: "Nutrition Planner", icon: Utensils },
           { id: "milestones", label: "Milestones Checklists", icon: Award },
@@ -664,7 +684,8 @@ export default function PatientProfilePage() {
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              id={`tab-${tab.id}`}
+              onClick={() => handleTabChange(tab.id as any)}
               className={`flex items-center gap-2 px-4 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap cursor-pointer -mb-[1px] ${isActive
                 ? "border-[#1E4E70] text-[#1E4E70] font-bold"
                 : "border-transparent text-slate-500 hover:text-slate-800"
@@ -810,7 +831,7 @@ export default function PatientProfilePage() {
             </div>
           </div>
         </div>
-      , document.body)}
+        , document.body)}
     </div>
   );
 }

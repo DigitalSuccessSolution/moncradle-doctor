@@ -70,37 +70,37 @@ export default function ProfileTab({ patient }: ProfileTabProps) {
 
             {/* Metrics Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-              <div className="bg-[#F8FAFC] hover:bg-slate-100/80 transition-colors rounded-xl p-4 space-y-1">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gender</p>
-                <p className="text-lg sm:text-xl font-extrabold text-slate-800 tracking-tight capitalize">
+              <div className="bg-violet-50/80 hover:bg-violet-100/80 transition-colors rounded-xl p-4 space-y-1">
+                <p className="text-[10px] font-bold text-violet-500/80 uppercase tracking-wider">Gender</p>
+                <p className="text-lg sm:text-xl font-extrabold text-violet-900 tracking-tight capitalize">
                   {patient.gender || "N/A"}
                 </p>
               </div>
               
-              <div className="bg-[#F8FAFC] hover:bg-slate-100/80 transition-colors rounded-xl p-4 space-y-1">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Age</p>
-                <p className="text-lg sm:text-xl font-extrabold text-slate-800 tracking-tight">
+              <div className="bg-sky-50/80 hover:bg-sky-100/80 transition-colors rounded-xl p-4 space-y-1">
+                <p className="text-[10px] font-bold text-sky-500/80 uppercase tracking-wider">Age</p>
+                <p className="text-lg sm:text-xl font-extrabold text-sky-900 tracking-tight">
                   {patient.ageInMonths !== undefined ? `${patient.ageInMonths} Mo` : "N/A"}
                 </p>
               </div>
 
-              <div className="bg-[#F8FAFC] hover:bg-slate-100/80 transition-colors rounded-xl p-4 space-y-1 md:col-span-2">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">DOB</p>
+              <div className="bg-[#A5D8FF]/20 hover:bg-[#A5D8FF]/30 transition-colors rounded-xl p-4 space-y-1 md:col-span-2">
+                <p className="text-[10px] font-bold text-[#1E4E70]/70 uppercase tracking-wider">DOB</p>
                 <p className="text-lg sm:text-xl font-extrabold text-[#1E4E70] tracking-tight">
                   {patient.dateOfBirth ? new Date(patient.dateOfBirth).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : "N/A"}
                 </p>
               </div>
 
-              <div className="bg-[#F8FAFC] hover:bg-slate-100/80 transition-colors rounded-xl p-4 space-y-1">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Weight</p>
-                <p className="text-lg sm:text-xl font-extrabold text-slate-800 tracking-tight">
+              <div className="bg-emerald-50/80 hover:bg-emerald-100/80 transition-colors rounded-xl p-4 space-y-1">
+                <p className="text-[10px] font-bold text-emerald-500/80 uppercase tracking-wider">Weight</p>
+                <p className="text-lg sm:text-xl font-extrabold text-emerald-900 tracking-tight">
                   {patient.weight ? `${patient.weight} kg` : "N/A"}
                 </p>
               </div>
 
-              <div className="bg-[#F8FAFC] hover:bg-slate-100/80 transition-colors rounded-xl p-4 space-y-1">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Height</p>
-                <p className="text-lg sm:text-xl font-extrabold text-slate-800 tracking-tight">
+              <div className="bg-teal-50/80 hover:bg-teal-100/80 transition-colors rounded-xl p-4 space-y-1">
+                <p className="text-[10px] font-bold text-teal-500/80 uppercase tracking-wider">Height</p>
+                <p className="text-lg sm:text-xl font-extrabold text-teal-900 tracking-tight">
                   {patient.height ? `${patient.height} cm` : "N/A"}
                 </p>
               </div>
