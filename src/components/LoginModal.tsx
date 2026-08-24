@@ -34,7 +34,7 @@ export default function LoginModal() {
   const { showLoginModal, setShowLoginModal, login } = useDoctorData();
 
   // Mode Tabs: "register" | "login" | "forgot_password"
-  const [activeTab, setActiveTab] = useState<"login" | "register" | "forgot_password">("register");
+  const [activeTab, setActiveTab] = useState<"login" | "register" | "forgot_password">("login");
 
   // Registration steps: "details" | "otp"
   const [step, setStep] = useState<"details" | "otp">("details");

@@ -206,15 +206,20 @@ export default function LandingPage() {
               className="object-cover object-[right_top]"
               priority
             />
-            {/* Soft Gradient Overlay on Left for Flawless Text Readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent w-full md:w-[65%]" />
+            {/* Colorful Soft Gradient Overlay on Left */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-50/95 via-pink-50/80 to-transparent w-full md:w-[65%]" />
+            
+            {/* Playful Pediatric Blobs */}
+            <div className="absolute top-[-10%] left-[-5%] w-96 h-96 bg-pink-300/30 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-[-10%] left-[20%] w-80 h-80 bg-sky-300/30 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute top-[30%] right-[30%] w-72 h-72 bg-emerald-200/20 rounded-full blur-[90px] pointer-events-none hidden md:block" />
           </div>
 
           {/* Aligned Inner Overlay Content */}
           <div className="relative z-10 max-w-7xl mx-auto px-8 w-full py-12">
             <div className="max-w-2xl space-y-6">
-              <span className="inline-flex items-center gap-1.5 bg-[#A5D8FF]/40 text-[#1E4E70] font-semibold text-xs px-4 py-1.5 rounded-full border border-[#A5D8FF]">
-                For Doctors & Nutritionists
+              <span className="inline-flex items-center gap-1.5 bg-pink-100 text-pink-700 font-semibold text-xs px-4 py-1.5 rounded-full border border-pink-200 shadow-sm">
+                👶 For Pediatricians & Nutritionists
               </span>
 
               <h1 className="text-5xl xl:text-6xl font-semibold text-slate-800 tracking-tight leading-[1.1]">
@@ -290,24 +295,24 @@ export default function LandingPage() {
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-              <div className="p-5 rounded-lg bg-[#F8F9FA] border border-slate-200/80 shadow-2xs space-y-1 hover:border-[#A5D8FF] transition-all">
-                <p className="text-3xl font-semibold text-[#1E4E70]">50,000+</p>
-                <p className="text-xs font-semibold text-slate-700">Active Parents Enrolled</p>
+              <div className="p-5 rounded-xl bg-pink-50 border border-pink-100 shadow-2xs space-y-1 hover:shadow-md hover:border-pink-300 transition-all transform hover:-translate-y-1">
+                <p className="text-3xl font-bold text-pink-600">50k+</p>
+                <p className="text-xs font-semibold text-pink-800">Happy Parents</p>
               </div>
 
-              <div className="p-5 rounded-lg bg-[#F8F9FA] border border-slate-200/80 shadow-2xs space-y-1 hover:border-[#A5D8FF] transition-all">
-                <p className="text-3xl font-semibold text-emerald-600">2,500+</p>
-                <p className="text-xs font-semibold text-slate-700">Verified Pediatricians</p>
+              <div className="p-5 rounded-xl bg-emerald-50 border border-emerald-100 shadow-2xs space-y-1 hover:shadow-md hover:border-emerald-300 transition-all transform hover:-translate-y-1">
+                <p className="text-3xl font-bold text-emerald-600">2,500+</p>
+                <p className="text-xs font-semibold text-emerald-800">Verified Doctors</p>
               </div>
 
-              <div className="p-5 rounded-lg bg-[#F8F9FA] border border-slate-200/80 shadow-2xs space-y-1 hover:border-[#A5D8FF] transition-all">
-                <p className="text-3xl font-semibold text-[#1E4E70]">99.4%</p>
-                <p className="text-xs font-semibold text-slate-700">Growth Tracking Precision</p>
+              <div className="p-5 rounded-xl bg-sky-50 border border-sky-100 shadow-2xs space-y-1 hover:shadow-md hover:border-sky-300 transition-all transform hover:-translate-y-1">
+                <p className="text-3xl font-bold text-sky-600">99.4%</p>
+                <p className="text-xs font-semibold text-sky-800">Growth Precision</p>
               </div>
 
-              <div className="p-5 rounded-lg bg-[#F8F9FA] border border-slate-200/80 shadow-2xs space-y-1 hover:border-[#A5D8FF] transition-all">
-                <p className="text-3xl font-semibold text-amber-500">4.9 ★</p>
-                <p className="text-xs font-semibold text-slate-700">Parent Satisfaction Rate</p>
+              <div className="p-5 rounded-xl bg-amber-50 border border-amber-100 shadow-2xs space-y-1 hover:shadow-md hover:border-amber-300 transition-all transform hover:-translate-y-1">
+                <p className="text-3xl font-bold text-amber-500">4.9 ★</p>
+                <p className="text-xs font-semibold text-amber-800">App Rating</p>
               </div>
             </div>
           </div>
@@ -710,10 +715,16 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto grid grid-cols-12 gap-8 pb-12 border-b border-slate-800 text-xs">
             <div className="col-span-4 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#1E4E70] text-white flex items-center justify-center font-semibold">
-                  <HeartPulse className="w-5 h-5" />
+                <div className="bg-white/95 px-3 py-1.5 rounded-xl shadow-sm inline-flex items-center">
+                  <Image
+                    src="/complete-logo.png"
+                    alt="Moncradel"
+                    width={150}
+                    height={42}
+                    className="h-8 w-auto object-contain"
+                    unoptimized
+                  />
                 </div>
-                <span className="font-semibold text-white text-lg tracking-tight">Moncradel Doctor</span>
               </div>
               <p className="text-slate-400 leading-relaxed">
                 Empowering pediatricians with WHO growth tracking, digital prescriptions, and personalized child nutrition plans.
