@@ -33,6 +33,8 @@ import {
   QrCode,
   Check,
   Home,
+  Zap,
+  LineChart,
 } from "lucide-react";
 import { useDoctorData } from "@/context/DoctorDataContext";
 import ApkDownloadModal from "@/components/ApkDownloadModal";
@@ -566,7 +568,7 @@ export default function LandingPage() {
           </div>
         </motion.section>
 
-        {/* SECTION: OUR PLATFORM */}
+        {/* SECTION: DOCTOR GROWTH & FEATURES */}
         <motion.section 
           initial={{ opacity: 0, y: 30 }} 
           whileInView={{ opacity: 1, y: 0 }} 
@@ -576,96 +578,63 @@ export default function LandingPage() {
           className="py-20 max-w-7xl mx-auto px-8 space-y-12"
         >
           <div className="text-center space-y-2 max-w-xl mx-auto">
-            <span className="text-xs font-semibold text-[#1E4E70] uppercase tracking-widest">OUR PLATFORM</span>
+            <span className="text-xs font-semibold text-[#1E4E70] uppercase tracking-widest">GROW YOUR PRACTICE</span>
             <h2 className="text-3xl xl:text-4xl font-semibold text-slate-800 tracking-tight">
-              An Integrated Ecosystem for Better Care
+              Scale Your Clinic with Smart Tech
             </h2>
           </div>
 
-          <div className="grid grid-cols-5 gap-4">
-            {/* Card 1: Parent PWA */}
-            <div className="bg-[#A5D8FF]/25 p-6 rounded-xl border border-[#A5D8FF]/50 flex flex-col justify-between space-y-6 hover:shadow-md transition-all">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Card 1: 10x Practice Growth */}
+            <div className="bg-[#A5D8FF]/20 p-8 rounded-2xl border border-[#A5D8FF]/40 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all hover:-translate-y-1">
               <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-white text-[#1E4E70] flex items-center justify-center shadow-xs">
-                  <Users className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-white text-[#1E4E70] flex items-center justify-center shadow-sm">
+                  <TrendingUp className="w-6 h-6" />
                 </div>
-                <h3 className="font-semibold text-slate-900 text-base">Parent PWA</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Parents get personalized nutrition plans, reminders, and real-time updates.
+                <h3 className="font-semibold text-slate-900 text-lg">10x Practice Growth</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Attract more parents with a premium digital clinic experience and modern health tools.
                 </p>
               </div>
-              <button onClick={() => setShowLoginModal(true)} className="text-xs font-semibold text-[#1E4E70] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
-                <span>Learn more</span>
-                <span>→</span>
-              </button>
             </div>
 
-            {/* Card 2: Doctor Portal */}
-            <div className="bg-rose-50/80 p-6 rounded-xl border border-rose-100 flex flex-col justify-between space-y-6 hover:shadow-md transition-all">
+            {/* Card 2: Clinical Efficiency */}
+            <div className="bg-emerald-50/80 p-8 rounded-2xl border border-emerald-100 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all hover:-translate-y-1">
               <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-white text-rose-600 flex items-center justify-center shadow-xs">
-                  <HeartPulse className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-white text-emerald-600 flex items-center justify-center shadow-sm">
+                  <Zap className="w-6 h-6" />
                 </div>
-                <h3 className="font-semibold text-slate-900 text-base">Doctor Portal</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Manage patients, growth, prescriptions, and consultations seamlessly.
+                <h3 className="font-semibold text-slate-900 text-lg">Clinical Efficiency</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Save hours daily with automated WHO growth calculations and instant e-prescriptions.
                 </p>
               </div>
-              <button onClick={() => setShowLoginModal(true)} className="text-xs font-semibold text-[#1E4E70] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
-                <span>Learn more</span>
-                <span>→</span>
-              </button>
             </div>
 
-            {/* Card 3: Cloud Kitchen */}
-            <div className="bg-emerald-50/80 p-6 rounded-xl border border-emerald-100 flex flex-col justify-between space-y-6 hover:shadow-md transition-all">
+            {/* Card 3: Patient Retention */}
+            <div className="bg-purple-50/80 p-8 rounded-2xl border border-purple-100 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all hover:-translate-y-1">
               <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-white text-emerald-600 flex items-center justify-center shadow-xs">
-                  <ChefHat className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-white text-purple-600 flex items-center justify-center shadow-sm">
+                  <HeartPulse className="w-6 h-6" />
                 </div>
-                <h3 className="font-semibold text-slate-900 text-base">Cloud Kitchen</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Hygienic, age-appropriate meals prepared with expert nutritionists.
+                <h3 className="font-semibold text-slate-900 text-lg">Patient Retention</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Build lasting trust through automated follow-ups, vaccine reminders, and nutrition plans.
                 </p>
               </div>
-              <button onClick={() => setShowLoginModal(true)} className="text-xs font-semibold text-[#1E4E70] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
-                <span>Learn more</span>
-                <span>→</span>
-              </button>
             </div>
 
-            {/* Card 4: Delivery Partner */}
-            <div className="bg-purple-50/80 p-6 rounded-xl border border-purple-100 flex flex-col justify-between space-y-6 hover:shadow-md transition-all">
+            {/* Card 4: Data-Driven Care */}
+            <div className="bg-amber-50/80 p-8 rounded-2xl border border-amber-100 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all hover:-translate-y-1">
               <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-white text-purple-600 flex items-center justify-center shadow-xs">
-                  <Truck className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-white text-amber-600 flex items-center justify-center shadow-sm">
+                  <LineChart className="w-6 h-6" />
                 </div>
-                <h3 className="font-semibold text-slate-900 text-base">Delivery Partner</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Timely and safe delivery ensuring freshness at your doorstep.
+                <h3 className="font-semibold text-slate-900 text-lg">Data-Driven Care</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Make informed clinical decisions backed by comprehensive pediatric health records.
                 </p>
               </div>
-              <button onClick={() => setShowLoginModal(true)} className="text-xs font-semibold text-[#1E4E70] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
-                <span>Learn more</span>
-                <span>→</span>
-              </button>
-            </div>
-
-            {/* Card 5: Super Admin */}
-            <div className="bg-amber-50/80 p-6 rounded-xl border border-amber-100 flex flex-col justify-between space-y-6 hover:shadow-md transition-all">
-              <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-white text-amber-600 flex items-center justify-center shadow-xs">
-                  <ShieldCheck className="w-5 h-5" />
-                </div>
-                <h3 className="font-semibold text-slate-900 text-base">Super Admin</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Complete control, analytics, and management of the entire platform.
-                </p>
-              </div>
-              <button onClick={() => setShowLoginModal(true)} className="text-xs font-semibold text-[#1E4E70] flex items-center gap-1 hover:gap-2 transition-all cursor-pointer">
-                <span>Learn more</span>
-                <span>→</span>
-              </button>
             </div>
           </div>
         </motion.section>
