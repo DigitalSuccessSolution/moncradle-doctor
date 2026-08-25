@@ -179,7 +179,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
   const updateDoctorProfile = (updated: Partial<DoctorProfile>, markComplete: boolean = false) => {
     setDoctorProfile((prev) => {
       const next = { ...prev, ...updated };
-      saveToStorage("moncradel_doctor_profile", next);
+      saveToStorage("moncradle_doctor_profile", next);
       return next;
     });
     if (markComplete) {
@@ -188,13 +188,13 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
       if (approvalStatus !== "approved") {
         setApprovalStatus("pending");
         try {
-          localStorage.setItem("moncradel_doctor_profile_complete", "true");
-          localStorage.setItem("moncradel_doctor_approval_status", "pending");
+          localStorage.setItem("moncradle_doctor_profile_complete", "true");
+          localStorage.setItem("moncradle_doctor_approval_status", "pending");
         } catch (e) {}
       } else {
         try {
-          localStorage.setItem("moncradel_doctor_profile_complete", "true");
-          localStorage.setItem("moncradel_doctor_approval_status", "approved");
+          localStorage.setItem("moncradle_doctor_profile_complete", "true");
+          localStorage.setItem("moncradle_doctor_approval_status", "approved");
         } catch (e) {}
       }
     }
@@ -258,10 +258,10 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
   // Hydrate from localStorage on client side
   useEffect(() => {
     try {
-      const storedPatients = localStorage.getItem("moncradel_doctor_patients");
+      const storedPatients = localStorage.getItem("moncradle_doctor_patients");
       if (storedPatients) setPatients(JSON.parse(storedPatients));
 
-      const storedApts = localStorage.getItem("moncradel_doctor_apts");
+      const storedApts = localStorage.getItem("moncradle_doctor_apts");
       if (storedApts) {
         const parsed: Appointment[] = JSON.parse(storedApts);
         const sanitized = parsed.map((a) => ({
@@ -271,13 +271,13 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
         setAppointments(sanitized);
       }
 
-      const storedNotes = localStorage.getItem("moncradel_doctor_notes");
+      const storedNotes = localStorage.getItem("moncradle_doctor_notes");
       if (storedNotes) setNotes(JSON.parse(storedNotes));
 
-      const storedRx = localStorage.getItem("moncradel_doctor_rx");
+      const storedRx = localStorage.getItem("moncradle_doctor_rx");
       if (storedRx) setPrescriptions(JSON.parse(storedRx));
 
-      const storedProfile = localStorage.getItem("moncradel_doctor_profile");
+      const storedProfile = localStorage.getItem("moncradle_doctor_profile");
       if (storedProfile) setDoctorProfile(JSON.parse(storedProfile));
 
       const storedToken = getStoredToken();
@@ -296,7 +296,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
 
             setApprovalStatus(isApproved ? "approved" : "pending");
             try {
-              localStorage.setItem("moncradel_doctor_approval_status", isApproved ? "approved" : "pending");
+              localStorage.setItem("moncradle_doctor_approval_status", isApproved ? "approved" : "pending");
             } catch (e) {}
 
             updateDoctorProfile({
@@ -334,7 +334,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
           if (res.success && Array.isArray(res.data) && res.data.length > 0) {
             const apiPatients = res.data.map(transformBackendBabyToPatient);
             setPatients(apiPatients);
-            saveToStorage("moncradel_doctor_patients", apiPatients);
+            saveToStorage("moncradle_doctor_patients", apiPatients);
           }
         }).catch(() => {});
 
@@ -343,7 +343,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
           if (res.success && Array.isArray(res.data)) {
             const apiAppointments = res.data.map(transformBackendAppointmentToFrontend);
             setAppointments(apiAppointments);
-            saveToStorage("moncradel_doctor_apts", apiAppointments);
+            saveToStorage("moncradle_doctor_apts", apiAppointments);
           }
         }).catch(() => {});
 
@@ -352,7 +352,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
           if (res.success && Array.isArray(res.data) && res.data.length > 0) {
             const apiRx = res.data.map(transformBackendPrescriptionToFrontend);
             setPrescriptions(apiRx);
-            saveToStorage("moncradel_doctor_rx", apiRx);
+            saveToStorage("moncradle_doctor_rx", apiRx);
           }
         }).catch(() => {});
 
@@ -372,21 +372,21 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
           }
         }).catch(() => {});
       } else {
-        const storedAuth = localStorage.getItem("moncradel_doctor_auth");
+        const storedAuth = localStorage.getItem("moncradle_doctor_auth");
         if (storedAuth === "true") setIsAuthenticated(true);
       }
 
-      const storedComplete = localStorage.getItem("moncradel_doctor_profile_complete");
+      const storedComplete = localStorage.getItem("moncradle_doctor_profile_complete");
       if (storedComplete !== null) {
         setIsProfileComplete(storedComplete === "true");
       }
 
-      const storedApproval = localStorage.getItem("moncradel_doctor_approval_status");
+      const storedApproval = localStorage.getItem("moncradle_doctor_approval_status");
       if (storedApproval === "pending" || storedApproval === "approved") {
         setApprovalStatus(storedApproval as "approved" | "pending");
       }
 
-      const welcomeDone = sessionStorage.getItem("moncradel_doctor_welcome_done");
+      const welcomeDone = sessionStorage.getItem("moncradle_doctor_welcome_done");
       if (welcomeDone === "true") setShowWelcomeScreen(false);
     } catch (e) {
       console.error("Failed to load local storage state", e);
@@ -421,8 +421,8 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
       setIsProfileComplete(false);
       setApprovalStatus("pending");
       try {
-        localStorage.setItem("moncradel_doctor_profile_complete", "false");
-        localStorage.setItem("moncradel_doctor_approval_status", "pending");
+        localStorage.setItem("moncradle_doctor_profile_complete", "false");
+        localStorage.setItem("moncradle_doctor_approval_status", "pending");
       } catch (e) {}
     } else {
       const vStatus = userData?.verificationStatus || userData?.approvalStatus || "pending";
@@ -430,13 +430,13 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
       setIsProfileComplete(true);
       setApprovalStatus(isApproved ? "approved" : "pending");
       try {
-        localStorage.setItem("moncradel_doctor_profile_complete", "true");
-        localStorage.setItem("moncradel_doctor_approval_status", isApproved ? "approved" : "pending");
+        localStorage.setItem("moncradle_doctor_profile_complete", "true");
+        localStorage.setItem("moncradle_doctor_approval_status", isApproved ? "approved" : "pending");
       } catch (e) {}
     }
 
     try {
-      localStorage.setItem("moncradel_doctor_auth", "true");
+      localStorage.setItem("moncradle_doctor_auth", "true");
     } catch (e) {}
 
     // Fetch babies from backend API GET /api/babies after login
@@ -444,7 +444,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
       if (res.success && Array.isArray(res.data) && res.data.length > 0) {
         const apiPatients = res.data.map(transformBackendBabyToPatient);
         setPatients(apiPatients);
-        saveToStorage("moncradel_doctor_patients", apiPatients);
+        saveToStorage("moncradle_doctor_patients", apiPatients);
       }
     }).catch(() => {});
 
@@ -453,7 +453,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
       if (res.success && Array.isArray(res.data)) {
         const apiAppointments = res.data.map(transformBackendAppointmentToFrontend);
         setAppointments(apiAppointments);
-        saveToStorage("moncradel_doctor_apts", apiAppointments);
+        saveToStorage("moncradle_doctor_apts", apiAppointments);
       }
     }).catch(() => {});
     
@@ -474,9 +474,9 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
     setIsProfileComplete(true);
     setShowWelcomeScreen(true);
     try {
-      localStorage.setItem("moncradel_doctor_auth", "false");
-      localStorage.removeItem("moncradel_doctor_profile_complete");
-      sessionStorage.removeItem("moncradel_doctor_welcome_done");
+      localStorage.setItem("moncradle_doctor_auth", "false");
+      localStorage.removeItem("moncradle_doctor_profile_complete");
+      sessionStorage.removeItem("moncradle_doctor_welcome_done");
     } catch (e) {}
     window.location.href = "/";
   };
@@ -513,7 +513,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
 
     const updated = [newPatient, ...patients];
     setPatients(updated);
-    saveToStorage("moncradel_doctor_patients", updated);
+    saveToStorage("moncradle_doctor_patients", updated);
     return newPatient;
   };
 
@@ -537,7 +537,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
 
     const updated = [newApt, ...appointments];
     setAppointments(updated);
-    saveToStorage("moncradel_doctor_apts", updated);
+    saveToStorage("moncradle_doctor_apts", updated);
     return newApt;
   };
 
@@ -558,7 +558,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
 
     const updated = [newNote, ...notes];
     setNotes(updated);
-    saveToStorage("moncradel_doctor_notes", updated);
+    saveToStorage("moncradle_doctor_notes", updated);
     return newNote;
   };
 
@@ -585,7 +585,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
       });
 
       setPrescriptions(updated);
-      saveToStorage("moncradel_doctor_rx", updated);
+      saveToStorage("moncradle_doctor_rx", updated);
       return updated.find((p) => p.id === data.id)!;
     }
 
@@ -605,7 +605,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
 
     const updated = [newRx, ...prescriptions];
     setPrescriptions(updated);
-    saveToStorage("moncradel_doctor_rx", updated);
+    saveToStorage("moncradle_doctor_rx", updated);
 
     // Sync to backend API POST /api/prescriptions
     prescriptionService.createPrescription({
@@ -629,7 +629,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
   const removePrescription = (id: string) => {
     const updated = prescriptions.filter((p) => p.id !== id);
     setPrescriptions(updated);
-    saveToStorage("moncradel_doctor_rx", updated);
+    saveToStorage("moncradle_doctor_rx", updated);
   };
 
   const updateNutritionPlan = (patientId: string, plan: Partial<NutritionPlan>) => {
@@ -665,7 +665,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
   const updateAppointmentStatus = (id: string, status: Appointment["status"]) => {
     const updated = appointments.map((apt) => (apt.id === id ? { ...apt, status } : apt));
     setAppointments(updated);
-    saveToStorage("moncradel_doctor_apts", updated);
+    saveToStorage("moncradle_doctor_apts", updated);
 
     // Sync status to backend API PATCH /api/appointments/:id/status
     const backendStatus = status === "Completed" ? "completed" : status === "Cancelled" ? "cancelled" : "scheduled";

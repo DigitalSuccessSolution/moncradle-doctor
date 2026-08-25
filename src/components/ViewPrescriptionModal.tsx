@@ -66,7 +66,7 @@ export default function ViewPrescriptionModal({
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-[#1E4E70] tracking-tight">{doctorName}</h2>
               <p className="text-xs font-semibold text-slate-600 mt-0.5">{doctorSpec}</p>
-              <p className="text-[11px] text-slate-500 mt-1">Reg No: KMC-98724 • MONCRADEL Pediatric Health Clinic</p>
+              <p className="text-[11px] text-slate-500 mt-1">Reg No: KMC-98724 • MONCRADLE Pediatric Health Clinic</p>
             </div>
             <div className="text-right shrink-0">
               <span className="inline-block bg-[#E0F2FE] text-[#1E4E70] font-bold text-xs px-3 py-1 rounded-lg border border-[#BAE6FD]">

@@ -11,7 +11,7 @@ export default function PartnerProgramPage() {
           <h1 className="text-xl sm:text-2xl font-semibold text-slate-800 tracking-tight">
             Doctor Partner Program
           </h1>
-          <p className="text-sm text-slate-500 mt-1">Join the Moncradel Network</p>
+          <p className="text-sm text-slate-500 mt-1">Join the Moncradle Network</p>
         </div>
       </div>
 
@@ -21,7 +21,7 @@ export default function PartnerProgramPage() {
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-4">1. Overview</h2>
           <p>
-            The Moncradel Doctor Partner Program is designed for forward-thinking pediatricians who want to elevate their clinical practice using our state-of-the-art digital tools. By joining the program, you gain exclusive access to advanced analytics, priority support, and a network of top pediatric professionals.
+            The Moncradle Doctor Partner Program is designed for forward-thinking pediatricians who want to elevate their clinical practice using our state-of-the-art digital tools. By joining the program, you gain exclusive access to advanced analytics, priority support, and a network of top pediatric professionals.
           </p>
         </section>
 
@@ -48,7 +48,7 @@ export default function PartnerProgramPage() {
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-4">4. How to Apply</h2>
           <p>
-            Applying is simple. Reach out to our partner success team via email at <strong>partners@moncradel.com</strong> with your credentials and clinic details. Our team will review your application and schedule a personalized demo within 48 hours.
+            Applying is simple. Reach out to our partner success team via email at <strong>partners@moncradle.com</strong> with your credentials and clinic details. Our team will review your application and schedule a personalized demo within 48 hours.
           </p>
         </section>
 

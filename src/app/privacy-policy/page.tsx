@@ -23,7 +23,7 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-4">1. Introduction</h2>
           <p>
-            Welcome to Moncradel Pediatric Care. We respect your privacy and are committed to protecting your personal data. 
+            Welcome to Moncradle Pediatric Care. We respect your privacy and are committed to protecting your personal data. 
             This privacy policy explains how we collect, use, and safeguard the information you provide when using our Progressive Web App (PWA) and associated clinical services.
           </p>
         </section>
@@ -61,7 +61,7 @@ export default function PrivacyPolicyPage() {
           <p>
             If you have any questions about this Privacy Policy, please contact our support team at:
             <br /><br />
-            <strong>Email:</strong> privacy@moncradel.com<br />
+            <strong>Email:</strong> privacy@moncradle.com<br />
             <strong>Phone:</strong> +91 99999-00000
           </p>
         </section>

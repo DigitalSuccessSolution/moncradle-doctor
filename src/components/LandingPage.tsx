@@ -133,7 +133,7 @@ export default function LandingPage() {
             <Link href="/" className="flex items-center cursor-pointer">
               <Image
                 src="/complete-logo.png"
-                alt="Moncradel"
+                alt="Moncradle"
                 width={170}
                 height={47}
                 className="h-10 w-auto object-contain"
@@ -148,7 +148,7 @@ export default function LandingPage() {
                 onClick={() => scrollToSection("features")}
                 className="hover:text-[#1E4E70] transition-colors cursor-pointer"
               >
-                Why Moncradel
+                Why Moncradle
               </button>
 
               <button
@@ -204,7 +204,7 @@ export default function LandingPage() {
           <div className="absolute inset-0 z-0">
             <Image
               src="/herobg.png"
-              alt="Moncradel Full Edge-to-Edge Hero Banner"
+              alt="Moncradle Full Edge-to-Edge Hero Banner"
               fill
               className="object-cover object-[right_top]"
               priority
@@ -231,7 +231,7 @@ export default function LandingPage() {
               </h1>
 
               <p className="text-base text-slate-700 leading-relaxed font-medium max-w-lg">
-                Moncradel empowers doctors and nutritionists to monitor child growth, deliver personalized nutrition plans, and build lasting relationships with parents.
+                Moncradle empowers doctors and nutritionists to monitor child growth, deliver personalized nutrition plans, and build lasting relationships with parents.
               </p>
 
               <div className="flex items-center gap-4 pt-2">
@@ -327,7 +327,7 @@ export default function LandingPage() {
           </div>
         </motion.section>
 
-        {/* SECTION: WHY DOCTORS CHOOSE MONCRADEL (6 FEATURE CARDS GRID) */}
+        {/* SECTION: WHY DOCTORS CHOOSE MONCRADLE (6 FEATURE CARDS GRID) */}
         <motion.section 
           initial={{ opacity: 0, y: 30 }} 
           whileInView={{ opacity: 1, y: 0 }} 
@@ -337,7 +337,7 @@ export default function LandingPage() {
           className="py-20 max-w-5xl mx-auto px-8 space-y-12"
         >
           <div className="text-center space-y-2 max-w-xl mx-auto">
-            <span className="text-xs font-semibold text-[#1E4E70] uppercase tracking-widest">WHY DOCTORS CHOOSE MONCRADEL</span>
+            <span className="text-xs font-semibold text-[#1E4E70] uppercase tracking-widest">WHY DOCTORS CHOOSE MONCRADLE</span>
             <h2 className="text-3xl xl:text-4xl font-semibold text-slate-800 tracking-tight">
               Everything You Need to Care Better
             </h2>
@@ -497,7 +497,7 @@ export default function LandingPage() {
               <div className="relative w-full max-w-md h-full min-h-[480px]">
                 <Image
                   src="/doctor_female.png"
-                  alt="Moncradel Pediatrician"
+                  alt="Moncradle Pediatrician"
                   fill
                   className="object-contain object-bottom drop-shadow-lg"
                   unoptimized
@@ -531,7 +531,7 @@ export default function LandingPage() {
                 We Handle the Rest
               </h2>
               <p className="text-sm text-slate-600 leading-relaxed font-normal">
-                Moncradel brings together growth tracking, nutrition recommendations, consultations, and follow-ups in one powerful platform so you can focus on what matters most — your patients.
+                Moncradle brings together growth tracking, nutrition recommendations, consultations, and follow-ups in one powerful platform so you can focus on what matters most — your patients.
               </p>
 
               {/* 4 Checkmark Bullets */}
@@ -659,7 +659,7 @@ export default function LandingPage() {
               <div className="w-48 h-80 bg-white border-4 border-slate-900 rounded-[32px] shadow-2xl p-4 flex flex-col items-center justify-center text-center space-y-3 relative overflow-hidden">
                 <Image
                   src="/complete-logo.png"
-                  alt="Moncradel"
+                  alt="Moncradle"
                   width={150}
                   height={41}
                   className="w-36 h-auto object-contain my-2"
@@ -675,7 +675,7 @@ export default function LandingPage() {
             {/* Center Column: Text & Buttons */}
             <div className="space-y-5 max-w-lg relative z-10">
               <h2 className="text-3xl font-semibold tracking-tight leading-tight text-white">
-                Join Hundreds of Doctors Using Moncradel
+                Join Hundreds of Doctors Using Moncradle
               </h2>
               <p className="text-xs text-white/90 leading-relaxed">
                 Download the PWA and start delivering better care today.
@@ -726,7 +726,7 @@ export default function LandingPage() {
                 <div className="bg-white/95 px-3 py-1.5 rounded-xl shadow-sm inline-flex items-center">
                   <Image
                     src="/complete-logo.png"
-                    alt="Moncradel"
+                    alt="Moncradle"
                     width={150}
                     height={42}
                     className="h-8 w-auto object-contain"
@@ -760,13 +760,13 @@ export default function LandingPage() {
             <div className="col-span-2 space-y-2.5">
               <h4 className="font-semibold text-xs text-white uppercase tracking-wider">Support Desk</h4>
               <Link href="/support" className="text-[#A5D8FF] hover:underline block font-semibold">Visit Support Desk →</Link>
-              <p className="text-slate-400">doctor-support@moncradel.com</p>
+              <p className="text-slate-400">doctor-support@moncradle.com</p>
               <p className="text-slate-400">+91 1800-419-8800</p>
             </div>
           </div>
 
           <div className="max-w-7xl mx-auto pt-6 flex items-center justify-between text-[11px] text-slate-500">
-            <p>© 2026 Moncradel Pediatric Health. All rights reserved.</p>
+            <p>© 2026 Moncradle Pediatric Health. All rights reserved.</p>
             <p>Designed with Apple HIG Aesthetics</p>
           </div>
         </footer>

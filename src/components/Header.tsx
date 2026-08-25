@@ -41,7 +41,7 @@ export default function Header() {
     if (pathname === "/medical-notes") return "Medical Notes";
     if (pathname === "/reports") return "Clinical Reports";
     if (pathname === "/notifications") return "Notifications & Alerts";
-    return "Moncradel Doctor";
+    return "Moncradle Doctor";
   };
 
   const filteredPatients = searchQuery.trim()
@@ -113,12 +113,12 @@ export default function Header() {
       ) : null}
 
       <div className={`max-w-7xl mx-auto items-center justify-between gap-2 sm:gap-4 ${isSubPage ? "hidden md:flex" : "flex"}`}>
-        {/* Left: Single Moncradel Logo for Mobile View (Desktop uses Sidebar Logo) */}
+        {/* Left: Single Moncradle Logo for Mobile View (Desktop uses Sidebar Logo) */}
         <div className="flex items-center gap-2 shrink-0 md:hidden">
           <Link href="/" className="flex items-center shrink-0">
             <Image
               src="/complete-logo.png"
-              alt="Moncradel"
+              alt="Moncradle"
               width={140}
               height={40}
               className="h-8 w-auto object-contain"

@@ -21,7 +21,7 @@ export default function ClinicalFAQsPage() {
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-4">1. How are the WHO Growth Charts calculated?</h2>
           <p>
-            Moncradel uses the exact datasets published by the World Health Organization (WHO) for children aged 0-5 years, and CDC data for older children. Our algorithms map the patient's weight, height, and head circumference against the standardized standard deviation (Z-score) tables to plot the percentiles accurately.
+            Moncradle uses the exact datasets published by the World Health Organization (WHO) for children aged 0-5 years, and CDC data for older children. Our algorithms map the patient's weight, height, and head circumference against the standardized standard deviation (Z-score) tables to plot the percentiles accurately.
           </p>
         </section>
 
@@ -49,7 +49,7 @@ export default function ClinicalFAQsPage() {
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-4">5. What if the app works offline?</h2>
           <p>
-            As a Progressive Web App (PWA), Moncradel caches critical UI components and recent patient data so you can continue viewing profiles even during network drops. However, saving new clinical data requires an active internet connection, and the app will queue changes or warn you if you are offline.
+            As a Progressive Web App (PWA), Moncradle caches critical UI components and recent patient data so you can continue viewing profiles even during network drops. However, saving new clinical data requires an active internet connection, and the app will queue changes or warn you if you are offline.
           </p>
         </section>
 

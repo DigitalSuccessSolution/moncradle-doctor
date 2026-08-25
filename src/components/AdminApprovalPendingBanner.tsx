@@ -31,7 +31,7 @@ export default function AdminApprovalPendingBanner() {
             </div>
 
             <p className="text-xs text-amber-800 font-medium leading-relaxed max-w-2xl">
-              Your Doctor Profile & Medical Credentials have been submitted successfully! Your account is currently under review by the MONCRADEL Medical Verification Board. Full clinical access will be activated upon admin approval.
+              Your Doctor Profile & Medical Credentials have been submitted successfully! Your account is currently under review by the MONCRADLE Medical Verification Board. Full clinical access will be activated upon admin approval.
             </p>
           </div>
         </div>

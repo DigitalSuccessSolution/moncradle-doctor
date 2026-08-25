@@ -109,7 +109,7 @@ export default function PrintableMedicalModal({
           {/* Clinic Letterhead */}
           <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-4 border-b-2 border-[#1E4E70] pb-4">
             <div className="flex flex-col gap-1">
-              <img src="/complete-logo.png" alt="Moncradel Logo" className="w-40 h-12 object-contain object-left" />
+              <img src="/complete-logo.png" alt="Moncradle Logo" className="w-40 h-12 object-contain object-left" />
               <p className="text-xs text-slate-500 font-semibold mt-1">
                 Pediatric Care & Child Growth Clinic
               </p>

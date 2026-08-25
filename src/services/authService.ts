@@ -202,5 +202,5 @@ export const authService = {
 
 export function getStoredToken(): string | null {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem("moncradel_doctor_token") || localStorage.getItem("moncradel_auth_token") || null;
+  return localStorage.getItem("moncradle_doctor_token") || localStorage.getItem("moncradle_auth_token") || null;
 }

@@ -539,7 +539,7 @@ export default function EditDoctorProfilePage() {
                     required
                     readOnly
                     value={formData.email || ""}
-                    placeholder="dr.sumitsahu@moncradel.com"
+                    placeholder="dr.sumitsahu@moncradle.com"
                     className="w-full text-xs sm:text-sm font-medium px-4 py-3 bg-slate-100 border border-slate-200 rounded-lg focus:outline-none text-slate-500 cursor-not-allowed opacity-90"
                   />
                 </div>
@@ -684,7 +684,7 @@ export default function EditDoctorProfilePage() {
                   required
                   value={formData.hospital || ""}
                   onChange={(e) => setFormData({ ...formData, hospital: e.target.value })}
-                  placeholder="Moncradel Pediatric Care Hub"
+                  placeholder="Moncradle Pediatric Care Hub"
                   className="w-full text-xs sm:text-sm font-medium px-4 py-3 bg-[#F8FAFC] border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4E70] focus:bg-white text-slate-900"
                 />
               </div>

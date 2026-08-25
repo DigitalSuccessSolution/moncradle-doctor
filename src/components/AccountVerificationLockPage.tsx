@@ -49,7 +49,7 @@ export default function AccountVerificationLockPage() {
       if (approved) {
         setApprovalStatus("approved");
         try {
-          localStorage.setItem("moncradel_doctor_approval_status", "approved");
+          localStorage.setItem("moncradle_doctor_approval_status", "approved");
         } catch (e) {}
         setStatusMessage("🎉 Congratulations! Your doctor verification is approved by Admin! Unlocking panel...");
       } else {
@@ -82,7 +82,7 @@ export default function AccountVerificationLockPage() {
         <Link href="/" className="flex items-center">
           <Image
             src="/complete-logo.png"
-            alt="Moncradel"
+            alt="Moncradle"
             width={150}
             height={41}
             className="h-9 w-auto object-contain"
@@ -137,7 +137,7 @@ export default function AccountVerificationLockPage() {
                 Account Verification in Progress
               </h2>
               <p className="text-sm text-slate-600 font-medium leading-relaxed">
-                Your Doctor Profile & Medical Credentials have been submitted successfully. Your account is currently under review by the MONCRADEL Medical Verification Board.
+                Your Doctor Profile & Medical Credentials have been submitted successfully. Your account is currently under review by the MONCRADLE Medical Verification Board.
               </p>
             </div>
 
@@ -183,7 +183,7 @@ export default function AccountVerificationLockPage() {
                     Clinic / Hospital
                   </span>
                   <span className="font-semibold text-slate-900 text-sm block break-words">
-                    {doctorProfile.hospital || "Moncradel Care Hub"}
+                    {doctorProfile.hospital || "Moncradle Care Hub"}
                   </span>
                 </div>
               </div>
@@ -220,8 +220,8 @@ export default function AccountVerificationLockPage() {
             {/* Support Email Notice */}
             <p className="text-xs sm:text-sm text-slate-500 font-medium pt-2 text-center md:text-left">
               Need urgent assistance? Contact board at{" "}
-              <a href="mailto:support@moncradel.com" className="text-[#1E4E70] font-bold hover:underline">
-                support@moncradel.com
+              <a href="mailto:support@moncradle.com" className="text-[#1E4E70] font-bold hover:underline">
+                support@moncradle.com
               </a>
             </p>
           </div>
@@ -230,7 +230,7 @@ export default function AccountVerificationLockPage() {
 
       {/* Footer */}
       <footer className="w-full py-3 text-center text-[11px] text-slate-400 font-medium border-t border-slate-200/60 bg-white/50">
-        © {new Date().getFullYear()} MONCRADEL Pediatrics • Verified Clinical Environment
+        © {new Date().getFullYear()} MONCRADLE Pediatrics • Verified Clinical Environment
       </footer>
     </div>
   );

@@ -474,7 +474,7 @@ export default function LoginModal() {
           <div className="pt-2 pb-1 text-center flex flex-col items-center justify-center">
             <Image
               src="/complete-logo.png"
-              alt="Moncradel Logo"
+              alt="Moncradle Logo"
               width={160}
               height={44}
               className="h-9 sm:h-10 w-auto object-contain mx-auto"
@@ -553,7 +553,7 @@ export default function LoginModal() {
                       <Mail className="w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 text-slate-400 shrink-0" />
                       <input
                         type="email"
-                        placeholder="dr.sumitsahu@moncradel.com"
+                        placeholder="dr.sumitsahu@moncradle.com"
                         value={doctorEmail}
                         onChange={(e) => setDoctorEmail(e.target.value)}
                         className="w-full bg-[#F8FAFC] focus:bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1E4E70] focus:border-[#1E4E70] transition-colors"
@@ -749,7 +749,7 @@ export default function LoginModal() {
                   <Mail className="w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 text-slate-400 shrink-0" />
                   <input
                     type="email"
-                    placeholder="dr.sumitsahu@moncradel.com"
+                    placeholder="dr.sumitsahu@moncradle.com"
                     value={signInEmail}
                     onChange={(e) => setSignInEmail(e.target.value)}
                     onKeyDown={(e) => {
@@ -872,7 +872,7 @@ export default function LoginModal() {
                       <Mail className="w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 text-slate-400 shrink-0" />
                       <input
                         type="email"
-                        placeholder="dr.sumitsahu@moncradel.com"
+                        placeholder="dr.sumitsahu@moncradle.com"
                         value={forgotEmail}
                         onChange={(e) => setForgotEmail(e.target.value)}
                         className="w-full bg-[#F8FAFC] focus:bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1E4E70] focus:border-[#1E4E70] transition-colors"

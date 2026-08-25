@@ -1,5 +1,5 @@
 /**
- * API Client Utility for Moncradel Doctor PWA
+ * API Client Utility for Moncradle Doctor PWA
  * Handles HTTP requests, authorization headers, and error formatting systematically.
  */
 
@@ -36,7 +36,7 @@ export class ApiError extends Error {
 export function getStoredToken(): string | null {
   if (typeof window === "undefined") return null;
   try {
-    return localStorage.getItem("moncradel_doctor_token");
+    return localStorage.getItem("moncradle_doctor_token");
   } catch (e) {
     return null;
   }
@@ -49,9 +49,9 @@ export function setStoredToken(token: string | null): void {
   if (typeof window === "undefined") return;
   try {
     if (token) {
-      localStorage.setItem("moncradel_doctor_token", token);
+      localStorage.setItem("moncradle_doctor_token", token);
     } else {
-      localStorage.removeItem("moncradel_doctor_token");
+      localStorage.removeItem("moncradle_doctor_token");
     }
   } catch (e) {
     console.error("Failed to save auth token to localStorage", e);

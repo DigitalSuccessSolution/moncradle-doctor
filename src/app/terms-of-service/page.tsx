@@ -23,7 +23,7 @@ export default function TermsOfServicePage() {
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-4">1. Acceptance of Terms</h2>
           <p>
-            By accessing and using the Moncradel Pediatric Care App, you accept and agree to be bound by the terms and provision of this agreement. 
+            By accessing and using the Moncradle Pediatric Care App, you accept and agree to be bound by the terms and provision of this agreement. 
             If you do not agree to abide by these terms, please do not use this service.
           </p>
         </section>
@@ -31,7 +31,7 @@ export default function TermsOfServicePage() {
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-4">2. Description of Service</h2>
           <p>
-            Moncradel provides clinical management tools, growth tracking, nutrition planning, and electronic prescription (eRx) features intended 
+            Moncradle provides clinical management tools, growth tracking, nutrition planning, and electronic prescription (eRx) features intended 
             for authorized pediatricians and clinic staff. The service is provided "as is" and "as available".
           </p>
         </section>
@@ -49,14 +49,14 @@ export default function TermsOfServicePage() {
           <h2 className="text-xl font-bold text-slate-900 mb-4">4. Intellectual Property</h2>
           <p>
             All content, features, and functionality (including but not limited to all information, software, text, displays, images, and the design) 
-            are owned by Moncradel and are protected by copyright, trademark, and other intellectual property laws.
+            are owned by Moncradle and are protected by copyright, trademark, and other intellectual property laws.
           </p>
         </section>
 
         <section>
           <h2 className="text-xl font-bold text-slate-900 mb-4">5. Limitation of Liability</h2>
           <p>
-            In no event shall Moncradel, its directors, employees, or agents be liable for any indirect, incidental, special, consequential, 
+            In no event shall Moncradle, its directors, employees, or agents be liable for any indirect, incidental, special, consequential, 
             or punitive damages arising out of your access to, or use of, the application and its clinical tools.
           </p>
         </section>

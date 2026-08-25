@@ -1,5 +1,5 @@
 /**
- * Central API Configuration for Moncradel Doctor PWA
+ * Central API Configuration for Moncradle Doctor PWA
  * Single Source of Truth for API Endpoints and Base URL configuration.
  * 
  * To point to a new IP or server (e.g., local network IP, staging, or production),

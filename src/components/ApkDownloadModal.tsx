@@ -27,11 +27,11 @@ export default function ApkDownloadModal({ isOpen, onClose }: { isOpen: boolean;
       // Trigger dummy download trigger
       const element = document.createElement("a");
       const file = new Blob(
-        ["MONCRADEL Doctor PWA Package - Android APK & Standalone Manifest\nVersion 2.4.0\nPackage: com.moncradel.doctor.pwa"],
+        ["MONCRADLE Doctor PWA Package - Android APK & Standalone Manifest\nVersion 2.4.0\nPackage: com.moncradle.doctor.pwa"],
         { type: "text/plain" }
       );
       element.href = URL.createObjectURL(file);
-      element.download = "MONCRADEL-Doctor-v2.4.0.apk";
+      element.download = "MONCRADLE-Doctor-v2.4.0.apk";
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
@@ -49,7 +49,7 @@ export default function ApkDownloadModal({ isOpen, onClose }: { isOpen: boolean;
               <Download className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-semibold text-base leading-tight">MONCRADEL Doctor App</h3>
+              <h3 className="font-semibold text-base leading-tight">MONCRADLE Doctor App</h3>
               <p className="text-xs opacity-80">Official Android APK Package</p>
             </div>
           </div>
