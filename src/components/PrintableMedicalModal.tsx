@@ -38,8 +38,6 @@ export default function PrintableMedicalModal({
 }: PrintableMedicalModalProps) {
   const { doctorProfile } = useDoctorData();
 
-  if (!isOpen) return null;
-
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -48,6 +46,8 @@ export default function PrintableMedicalModal({
     }
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
+
+  if (!isOpen) return null;
 
   const handlePrint = () => {
     window.print();
