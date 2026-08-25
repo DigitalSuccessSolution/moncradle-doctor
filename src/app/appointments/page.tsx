@@ -31,17 +31,19 @@ import { babyService } from "@/services/babyService";
 export default function AppointmentsPage() {
   const { appointments, setAppointments, patients } = useDoctorData();
 
-
+  const [localAppointments, setLocalAppointments] = useState<any[]>([]);
+  const [totalAppointmentsCount, setTotalAppointmentsCount] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   // Selected Patient Profile Drawer / Modal state
   const [selectedPatientModal, setSelectedPatientModal] = useState<any | null>(null);
 
-  // Cancel / Reject Modal state
-  const [cancelModalApt, setCancelModalApt] = useState<any | null>(null);
+  // Status Modal state
+  const [statusModalApt, setStatusModalApt] = useState<any | null>(null);
+  const [statusSelection, setStatusSelection] = useState<string>("scheduled");
   const [cancellationReason, setCancellationReason] = useState<string>("");
-  const [isSubmittingCancel, setIsSubmittingCancel] = useState<boolean>(false);
+  const [isSubmittingStatus, setIsSubmittingStatus] = useState<boolean>(false);
 
   // Edit Notes / Meeting Link Modal state
   const [editModalApt, setEditModalApt] = useState<any | null>(null);
@@ -53,10 +55,19 @@ export default function AppointmentsPage() {
   const [timeFilter, setTimeFilter] = useState<"upcoming" | "past">("upcoming");
   const [currentPage, setCurrentPage] = useState<number>(1);
 
+  const ITEMS_PER_PAGE = 10;
+
   const fetchLiveAppointments = async () => {
     setLoading(true);
     try {
-      const res = await appointmentService.fetchAppointments();
+      const status_in = timeFilter === "upcoming" ? ["scheduled"] : ["completed", "cancelled"];
+      const res = await appointmentService.fetchAppointments({
+        page: currentPage,
+        limit: ITEMS_PER_PAGE,
+        search: searchQuery,
+        status_in: status_in,
+      });
+
       if (res.success && Array.isArray(res.data)) {
         const list = res.data.map((app: any) => {
           const transformed = transformBackendAppointmentToFrontend(app);
@@ -73,7 +84,8 @@ export default function AppointmentsPage() {
             rawParentData: parent,
           };
         });
-        setAppointments(list);
+        setLocalAppointments(list);
+        setTotalAppointmentsCount(res.total || list.length);
       }
     } catch (err) {
       console.warn("Failed to fetch live appointments:", err);
@@ -84,11 +96,23 @@ export default function AppointmentsPage() {
 
   useEffect(() => {
     fetchLiveAppointments();
-  }, []);
+  }, [currentPage, timeFilter]);
+
+  // Debounce search
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (currentPage !== 1) {
+        setCurrentPage(1); // Reset to page 1 on new search, which will trigger fetch
+      } else {
+        fetchLiveAppointments();
+      }
+    }, 500);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
 
   // Lock body scroll when any modal/drawer is open
   useEffect(() => {
-    if (selectedMobileApt || selectedPatientModal || cancelModalApt || editModalApt) {
+    if (selectedMobileApt || selectedPatientModal || statusModalApt || editModalApt) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -96,40 +120,47 @@ export default function AppointmentsPage() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [selectedMobileApt, selectedPatientModal, cancelModalApt, editModalApt]);
+  }, [selectedMobileApt, selectedPatientModal, statusModalApt, editModalApt]);
 
   const handleOpenQuickAdd = () => {
     window.dispatchEvent(new CustomEvent("open-quick-add", { detail: { tab: "consultation" } }));
   };
 
-  // Submit Rejection / Cancellation with reason
-  const handleConfirmReject = async (e: React.FormEvent) => {
+  // Submit Status Change with reason
+  const handleStatusSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!cancelModalApt || !cancellationReason.trim()) return;
+    if (!statusModalApt) return;
+    if (statusSelection === "cancelled" && !cancellationReason.trim()) return;
 
-    setIsSubmittingCancel(true);
+    setIsSubmittingStatus(true);
     try {
-      const res = await appointmentService.updateStatus(cancelModalApt.id, "cancelled", {
-        cancellationReason: cancellationReason.trim(),
-      });
+      const extra = statusSelection === "cancelled" ? { cancellationReason: cancellationReason.trim() } : {};
+      const res = await appointmentService.updateStatus(statusModalApt.id, statusSelection as any, extra);
 
       if (res.success || res.data) {
         setAppointments((prev) =>
           prev.map((a) =>
-            a.id === cancelModalApt.id
-              ? { ...a, status: "Cancelled" as any, cancellationReason: cancellationReason.trim() }
+            a.id === statusModalApt.id
+              ? { ...a, status: (statusSelection.charAt(0).toUpperCase() + statusSelection.slice(1)) as any, ...extra }
               : a
           )
         );
-        setCancelModalApt(null);
+        setLocalAppointments((prev) =>
+          prev.map((a) =>
+            a.id === statusModalApt.id
+              ? { ...a, status: (statusSelection.charAt(0).toUpperCase() + statusSelection.slice(1)) as any, ...extra }
+              : a
+          )
+        );
+        setStatusModalApt(null);
         setCancellationReason("");
       } else {
-        alert(res.message || "Failed to cancel appointment");
+        alert(res.message || "Failed to update status");
       }
     } catch (err) {
-      console.error("Error cancelling appointment:", err);
+      console.error("Error updating status:", err);
     } finally {
-      setIsSubmittingCancel(false);
+      setIsSubmittingStatus(false);
     }
   };
 
@@ -150,6 +181,13 @@ export default function AppointmentsPage() {
 
       if (res.success || res.data) {
         setAppointments((prev) =>
+          prev.map((a) =>
+            a.id === editModalApt.id
+              ? { ...a, doctorNotes: editNotes.trim() }
+              : a
+          )
+        );
+        setLocalAppointments((prev) =>
           prev.map((a) =>
             a.id === editModalApt.id
               ? { ...a, doctorNotes: editNotes.trim() }
@@ -179,33 +217,9 @@ export default function AppointmentsPage() {
     setSelectedPatientModal(fullPatient);
   };
 
-  // Filter appointments
-  const filteredAppointments = [...appointments].filter((apt) => {
-    const rawStatus = (apt.status || "scheduled").toLowerCase();
-    
-    // Time filter logic based on status
-    const isPastStatus = rawStatus === "completed" || rawStatus === "cancelled";
-    const isUpcomingStatus = !isPastStatus;
-    
-    if (timeFilter === "upcoming" && !isUpcomingStatus) return false;
-    if (timeFilter === "past" && !isPastStatus) return false;
-
-    const query = searchQuery.toLowerCase().trim();
-    const searchMatch =
-      !query ||
-      apt.patientName?.toLowerCase().includes(query) ||
-      apt.parentName?.toLowerCase().includes(query) ||
-      apt.parentPhone?.toLowerCase().includes(query);
-
-    return searchMatch;
-  });
-
-  const ITEMS_PER_PAGE = 10;
-  const totalPages = Math.max(1, Math.ceil(filteredAppointments.length / ITEMS_PER_PAGE));
-  const paginatedAppointments = filteredAppointments.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  // Server-side paginated appointments
+  const paginatedAppointments = localAppointments;
+  const totalPages = Math.max(1, Math.ceil(totalAppointmentsCount / ITEMS_PER_PAGE));
 
   return (
     <div className="space-y-6 animate-fadeIn pb-24 font-sans">
@@ -269,7 +283,7 @@ export default function AppointmentsPage() {
             <RefreshCw className="w-6 h-6 text-[#1E4E70] animate-spin mx-auto" />
             <p>Syncing appointment records from backend API...</p>
           </div>
-        ) : filteredAppointments.length === 0 ? (
+        ) : paginatedAppointments.length === 0 ? (
           <div className="py-16 text-center space-y-3 p-6">
             <Calendar className="w-12 h-12 text-slate-300 mx-auto" />
             <h3 className="text-sm font-bold text-slate-800">No Appointments Found</h3>
@@ -296,14 +310,12 @@ export default function AppointmentsPage() {
                 {paginatedAppointments.map((apt) => {
                   const rawStatus = (apt.status || "scheduled").toLowerCase();
                   let statusBadgeClass = "bg-sky-50 text-[#1E4E70] border-sky-200";
-                  let statusText = "Active";
+                  let statusText = rawStatus.charAt(0).toUpperCase() + rawStatus.slice(1);
 
                   if (rawStatus === "completed") {
                     statusBadgeClass = "bg-emerald-50 text-emerald-800 border-emerald-200";
-                    statusText = "Completed";
                   } else if (rawStatus === "cancelled") {
                     statusBadgeClass = "bg-rose-50 text-rose-700 border-rose-200";
-                    statusText = "Cancelled";
                   }
 
                   return (
@@ -364,18 +376,17 @@ export default function AppointmentsPage() {
                       {/* Actions */}
                       <td className="py-3.5 px-5 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          {rawStatus !== "cancelled" && (
-                            <button
-                              onClick={() => {
-                                setCancelModalApt(apt);
-                                setCancellationReason("");
-                              }}
-                              className="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold px-2.5 py-1.5 rounded-xl border border-rose-200 cursor-pointer transition-colors"
-                              title="Reject / Cancel Appointment"
-                            >
-                              Reject
-                            </button>
-                          )}
+                          <button
+                            onClick={() => {
+                              setStatusModalApt(apt);
+                              setStatusSelection(rawStatus);
+                              setCancellationReason("");
+                            }}
+                            disabled={rawStatus === "cancelled"}
+                            className="bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 text-xs font-semibold px-2.5 py-1.5 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 disabled:border-slate-200"
+                          >
+                            Modify Status
+                          </button>
 
                           <button
                             onClick={() => {
@@ -401,14 +412,12 @@ export default function AppointmentsPage() {
             {paginatedAppointments.map((apt) => {
               const rawStatus = (apt.status || "scheduled").toLowerCase();
               let statusBadgeClass = "bg-sky-50 text-[#1E4E70] border-sky-200";
-              let statusText = "Active";
+              let statusText = rawStatus.charAt(0).toUpperCase() + rawStatus.slice(1);
 
               if (rawStatus === "completed") {
                 statusBadgeClass = "bg-emerald-50 text-emerald-800 border-emerald-200";
-                statusText = "Completed";
               } else if (rawStatus === "cancelled") {
                 statusBadgeClass = "bg-rose-50 text-rose-700 border-rose-200";
-                statusText = "Cancelled";
               }
 
               return (
@@ -458,17 +467,17 @@ export default function AppointmentsPage() {
                     >
                       Details
                     </button>
-                    {(!apt.status || apt.status.toLowerCase() !== "cancelled") && (
-                      <button
-                        onClick={() => {
-                          setCancelModalApt(apt);
-                          setCancellationReason("");
-                        }}
-                        className="text-rose-600 font-semibold text-xs py-2 px-3 rounded-xl border border-rose-200 hover:bg-rose-50 transition-colors cursor-pointer shrink-0 text-center"
-                      >
-                        Reject
-                      </button>
-                    )}
+                    <button
+                      onClick={() => {
+                        setStatusModalApt(apt);
+                        setStatusSelection(rawStatus);
+                        setCancellationReason("");
+                      }}
+                      disabled={rawStatus === "cancelled"}
+                      className="bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 text-xs font-semibold py-2 px-3 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-500/50 transition-colors shrink-0 text-center disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 disabled:border-slate-200"
+                    >
+                      Modify Status
+                    </button>
                   </div>
                 </div>
               );
@@ -580,22 +589,22 @@ export default function AppointmentsPage() {
         </div>
       )}
 
-      {/* 5. REJECTION / CANCELLATION MODAL */}
-      {cancelModalApt && typeof document !== "undefined" && createPortal(
+      {/* 5. STATUS MODAL */}
+      {statusModalApt && typeof document !== "undefined" && createPortal(
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[9999] flex items-center justify-center p-4 animate-fadeIn">
-          <div className="absolute inset-0" onClick={() => setCancelModalApt(null)} />
+          <div className="absolute inset-0" onClick={() => setStatusModalApt(null)} />
           <form
-            onSubmit={handleConfirmReject}
+            onSubmit={handleStatusSubmit}
             className="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4 font-sans relative z-10"
           >
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-rose-600" />
-                <h3 className="font-bold text-slate-900 text-sm">Reject / Cancel Appointment</h3>
+                <AlertCircle className="w-5 h-5 text-[#1E4E70]" />
+                <h3 className="font-bold text-slate-900 text-sm">Modify Appointment Status</h3>
               </div>
               <button
                 type="button"
-                onClick={() => setCancelModalApt(null)}
+                onClick={() => setStatusModalApt(null)}
                 className="text-slate-400 hover:text-slate-600 p-1"
               >
                 <X className="w-4 h-4" />
@@ -603,35 +612,57 @@ export default function AppointmentsPage() {
             </div>
 
             <p className="text-xs text-slate-600 font-medium">
-              Please enter the cancellation reason for <span className="font-bold text-slate-900">{cancelModalApt.patientName}</span>. This reason will be logged into backend API.
+              Update status for <span className="font-bold text-slate-900">{statusModalApt.patientName}</span>.
             </p>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700">Cancellation Reason *</label>
-              <textarea
-                required
-                rows={3}
-                value={cancellationReason}
-                onChange={(e) => setCancellationReason(e.target.value)}
-                placeholder="e.g. Doctor emergency OPD duty at requested time slot..."
-                className="w-full bg-[#F8FAFC] border border-slate-200 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#1E4E70]"
-              />
+            <div className="space-y-3">
+              <label className="text-xs font-semibold text-slate-700 block">Select Status</label>
+              <div className="grid grid-cols-3 gap-2">
+                {["scheduled", "completed", "cancelled"].map((status) => (
+                  <button
+                    key={status}
+                    type="button"
+                    onClick={() => setStatusSelection(status)}
+                    className={`py-2 px-1 text-xs font-semibold rounded-lg border capitalize transition-colors cursor-pointer ${
+                      statusSelection === status
+                        ? "bg-[#1E4E70] text-white border-[#1E4E70]"
+                        : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                    }`}
+                  >
+                    {status}
+                  </button>
+                ))}
+              </div>
             </div>
+
+            {statusSelection === "cancelled" && (
+              <div className="space-y-1.5 animate-fadeIn">
+                <label className="text-xs font-semibold text-slate-700">Cancellation Reason *</label>
+                <textarea
+                  required
+                  rows={3}
+                  value={cancellationReason}
+                  onChange={(e) => setCancellationReason(e.target.value)}
+                  placeholder="e.g. Doctor emergency OPD duty at requested time slot..."
+                  className="w-full bg-[#F8FAFC] border border-slate-200 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#1E4E70]"
+                />
+              </div>
+            )}
 
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => setCancelModalApt(null)}
+                onClick={() => setStatusModalApt(null)}
                 className="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                disabled={isSubmittingCancel || !cancellationReason.trim()}
-                className="px-4 py-2.5 text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+                disabled={isSubmittingStatus || (statusSelection === "cancelled" && !cancellationReason.trim())}
+                className="px-4 py-2.5 text-xs font-semibold bg-[#1E4E70] hover:bg-[#153852] text-white rounded-xl shadow-xs transition-colors cursor-pointer disabled:opacity-50"
               >
-                {isSubmittingCancel ? "Cancelling..." : "Confirm Rejection"}
+                {isSubmittingStatus ? "Saving..." : "Save Status"}
               </button>
             </div>
           </form>
@@ -793,18 +824,18 @@ export default function AppointmentsPage() {
                 >
                   <FileText className="w-4 h-4" /> Doctor Notes
                 </button>
-                {(!selectedMobileApt.status || selectedMobileApt.status.toLowerCase() !== "cancelled") && (
-                  <button
-                    onClick={() => {
-                      setSelectedMobileApt(null);
-                      setCancelModalApt(selectedMobileApt);
-                      setCancellationReason("");
-                    }}
-                    className="bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-colors border border-rose-200"
-                  >
-                    Reject
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    setSelectedMobileApt(null);
+                    setStatusModalApt(selectedMobileApt);
+                    setStatusSelection((selectedMobileApt.status || "scheduled").toLowerCase());
+                    setCancellationReason("");
+                  }}
+                  disabled={(selectedMobileApt.status || "scheduled").toLowerCase() === "cancelled"}
+                  className="bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 font-semibold text-xs py-3 rounded-xl flex items-center justify-center cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500/50 w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 disabled:border-slate-200"
+                >
+                  Modify Status
+                </button>
               </div>
             </div>
           </div>
