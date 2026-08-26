@@ -99,10 +99,21 @@ export default function ReportsPage() {
 
   const handleRequestWithdrawal = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!withdrawalAmount || isNaN(Number(withdrawalAmount)) || Number(withdrawalAmount) > availableBalance) {
-      showToast("Please enter a valid amount within your available balance.", "error");
+    const amount = Number(withdrawalAmount);
+    
+    if (!withdrawalAmount || isNaN(amount)) {
+      showToast("Please enter a valid numeric amount.", "error");
       return;
     }
+    if (amount < 100) {
+      showToast("Minimum withdrawal amount is ₹100.", "error");
+      return;
+    }
+    if (amount > availableBalance) {
+      showToast("Amount exceeds available balance.", "error");
+      return;
+    }
+
     
     setLoading(true);
     const res = await withdrawalService.requestWithdrawal(Number(withdrawalAmount));
@@ -194,7 +205,12 @@ export default function ReportsPage() {
                 <p className="text-xs font-medium text-slate-500">Ready to withdraw</p>
                 <button 
                   onClick={() => setShowWithdrawalModal(true)}
-                  className="text-[10px] font-bold text-white bg-[#1E4E70] hover:bg-[#153852] px-2 py-1 rounded transition-colors cursor-pointer"
+                  disabled={availableBalance < 100}
+                  className={`text-[10px] font-bold text-white px-2 py-1 rounded transition-colors ${
+                    availableBalance < 100 
+                      ? 'bg-slate-300 cursor-not-allowed' 
+                      : 'bg-[#1E4E70] hover:bg-[#153852] cursor-pointer'
+                  }`}
                 >
                   Withdraw
                 </button>
@@ -504,8 +520,6 @@ export default function ReportsPage() {
                 <input
                   type="number"
                   required
-                  min="100"
-                  max={availableBalance}
                   value={withdrawalAmount}
                   onChange={(e) => setWithdrawalAmount(e.target.value)}
                   placeholder="e.g. 5000"

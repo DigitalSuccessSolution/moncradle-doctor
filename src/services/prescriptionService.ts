@@ -64,12 +64,12 @@ export function transformBackendPrescriptionToFrontend(rx: any): Prescription {
 
   const mappedMedicines = Array.isArray(rawMedicines)
     ? rawMedicines.map((m: any) => ({
-        medicineName: m.medicineName || m.name || "Pediatric Medicine",
-        dosage: m.dosage || "1 ml",
-        frequency: m.frequency || "1-0-1",
-        duration: m.duration || "5 Days",
-        instructions: m.instructions || "After meals",
-      }))
+      medicineName: m.medicineName || m.name || "Pediatric Medicine",
+      dosage: m.dosage || "1 ml",
+      frequency: m.frequency || "1-0-1",
+      duration: m.duration || "5 Days",
+      instructions: m.instructions || "After meals",
+    }))
     : [];
 
   return {
@@ -152,14 +152,14 @@ export const prescriptionService = {
     const medicinesStr = Array.isArray(data.medicines)
       ? JSON.stringify(data.medicines)
       : typeof data.medicines === "string"
-      ? data.medicines
-      : undefined;
+        ? data.medicines
+        : undefined;
 
     const vitalsStr = typeof data.vitals === "object" && data.vitals !== null
       ? JSON.stringify(data.vitals)
       : typeof data.vitals === "string"
-      ? data.vitals
-      : undefined;
+        ? data.vitals
+        : undefined;
 
     const payload: any = {
       babyId: ensureValidObjectId(data.babyId),
@@ -195,14 +195,14 @@ export const prescriptionService = {
     const medicinesStr = Array.isArray(data.medicines)
       ? JSON.stringify(data.medicines)
       : typeof data.medicines === "string"
-      ? data.medicines
-      : undefined;
+        ? data.medicines
+        : undefined;
 
     const vitalsStr = typeof data.vitals === "object" && data.vitals !== null
       ? JSON.stringify(data.vitals)
       : typeof data.vitals === "string"
-      ? data.vitals
-      : undefined;
+        ? data.vitals
+        : undefined;
 
     const payload: any = {};
     if (data.medicalNotes !== undefined) payload.medicalNotes = data.medicalNotes;
