@@ -20,6 +20,8 @@ import {
   Ban
 } from "lucide-react";
 import { earningService, EarningApiResponse, EarningItem } from "@/services/earningService";
+import { analyticsService, DoctorAnalyticsResponse } from "@/services/analyticsService";
+import { withdrawalService, WithdrawalItem } from "@/services/withdrawalService";
 import {
   AreaChart,
   Area,
@@ -35,71 +37,84 @@ import {
 
 export default function ReportsPage() {
   const [activeTab, setActiveTab] = useState<"financial" | "clinical">("financial");
+  const [analyticsData, setAnalyticsData] = useState<DoctorAnalyticsResponse["data"] | null>(null);
   const [earningsData, setEarningsData] = useState<EarningApiResponse | null>(null);
+  const [withdrawalHistory, setWithdrawalHistory] = useState<WithdrawalItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  
-  // Withdrawal Modal State (Mock)
+
+  // Withdrawal Modal State
   const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
   const [withdrawalAmount, setWithdrawalAmount] = useState<string>("");
 
-  const fetchEarnings = async () => {
+  // Toast Notification State
+  const [toastMessage, setToastMessage] = useState<{title: string, type: 'success' | 'error' | 'info'} | null>(null);
+
+  const showToast = (title: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setToastMessage({ title, type });
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await earningService.getEarnings();
-      setEarningsData(res);
+      const [earningsRes, analyticsRes, withdrawalRes] = await Promise.all([
+        earningService.getEarnings(),
+        analyticsService.getDoctorAnalytics(),
+        withdrawalService.getWithdrawalHistory()
+      ]);
+      setEarningsData(earningsRes);
+      setWithdrawalHistory(withdrawalRes);
+      if (analyticsRes?.success) {
+        setAnalyticsData(analyticsRes.data);
+      }
     } catch (err) {
-      console.error("Error fetching earnings report:", err);
+      console.error("Error fetching report data:", err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchEarnings();
+    fetchData();
   }, []);
 
-  // --- MOCK LOGIC BASED ON NEW WITHDRAWAL SYSTEM ---
-  // Once backend is updated, these will come from the API.
-  const totalEarned = earningsData?.totalEarned ?? 0;
-  const availableBalance = Math.floor(totalEarned * 0.5); 
-  const pendingSettlement = Math.floor(totalEarned * 0.2);
-  const totalWithdrawn = totalEarned - availableBalance - pendingSettlement;
+  // --- LOGIC FROM API ---
+  const totalEarned = analyticsData?.financial.totalEarned ?? 0;
+  const availableBalance = analyticsData?.financial.availableBalance ?? 0;
+  const pendingSettlement = analyticsData?.financial.pendingSettlement ?? 0;
+  const totalWithdrawn = analyticsData?.financial.totalWithdrawn ?? 0;
   const earningsList: EarningItem[] = earningsData?.data || [];
 
-  // Mock Graph Data
-  const financialGraphData = [
-    { name: 'Mon', revenue: 1200 },
-    { name: 'Tue', revenue: 1900 },
-    { name: 'Wed', revenue: 1500 },
-    { name: 'Thu', revenue: 2200 },
-    { name: 'Fri', revenue: 1000 },
-    { name: 'Sat', revenue: 2800 },
-    { name: 'Sun', revenue: 2400 },
-  ];
+  const financialGraphData = analyticsData?.financial.graphData || [];
+  const clinicalGraphData = analyticsData?.clinical.graphData || [];
 
-  const clinicalGraphData = [
-    { name: 'Mon', appointments: 12, completed: 10 },
-    { name: 'Tue', appointments: 19, completed: 18 },
-    { name: 'Wed', appointments: 15, completed: 12 },
-    { name: 'Thu', appointments: 22, completed: 21 },
-    { name: 'Fri', appointments: 10, completed: 9 },
-    { name: 'Sat', appointments: 28, completed: 25 },
-    { name: 'Sun', appointments: 24, completed: 24 },
-  ];
+  const totalAppointments = analyticsData?.clinical.totalAppointments ?? 0;
+  const completedAppointments = analyticsData?.clinical.completedAppointments ?? 0;
+  const cancelledAppointments = analyticsData?.clinical.cancelledAppointments ?? 0;
+  const uniquePatients = analyticsData?.clinical.uniquePatients ?? 0;
 
   const handleExportCSV = () => {
-    alert("Exporting CSV...");
+    showToast("Exporting CSV started...", "info");
   };
 
-  const handleRequestWithdrawal = (e: React.FormEvent) => {
+  const handleRequestWithdrawal = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!withdrawalAmount || isNaN(Number(withdrawalAmount)) || Number(withdrawalAmount) > availableBalance) {
-      alert("Please enter a valid amount within your available balance.");
+      showToast("Please enter a valid amount within your available balance.", "error");
       return;
     }
-    alert(`Withdrawal request for ₹${withdrawalAmount} submitted successfully! (Mock)`);
-    setShowWithdrawalModal(false);
-    setWithdrawalAmount("");
+    
+    setLoading(true);
+    const res = await withdrawalService.requestWithdrawal(Number(withdrawalAmount));
+    if (res?.success) {
+      showToast(`Withdrawal request for ₹${withdrawalAmount} submitted successfully!`, "success");
+      setShowWithdrawalModal(false);
+      setWithdrawalAmount("");
+      fetchData(); // Refresh UI to update balances and table
+    } else {
+      showToast(res?.message || "Failed to submit withdrawal request.", "error");
+    }
+    setLoading(false);
   };
 
   return (
@@ -288,7 +303,7 @@ export default function ReportsPage() {
                 <p className="text-xs text-slate-500 font-medium mt-0.5">Track your requests and settled bank transfers</p>
               </div>
               <button
-                onClick={fetchEarnings}
+                onClick={fetchData}
                 className="p-2 text-[#1E4E70] hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
                 title="Refresh Data"
               >
@@ -298,7 +313,7 @@ export default function ReportsPage() {
 
             {loading ? (
               <div className="py-8 text-center text-xs text-slate-500 font-medium">Fetching records...</div>
-            ) : earningsList.length === 0 ? (
+            ) : withdrawalHistory.length === 0 ? (
               <div className="py-12 text-center space-y-3 border border-dashed border-slate-200 rounded-lg">
                 <Receipt className="w-10 h-10 text-slate-300 mx-auto" />
                 <div className="space-y-1">
@@ -320,23 +335,26 @@ export default function ReportsPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 font-medium">
-                    {/* Mock mapping for UI demonstration */}
-                    {[1, 2].map((item, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50/50">
+                    {withdrawalHistory.map((item, idx) => (
+                      <tr key={item._id} className="hover:bg-slate-50/50">
                         <td className="py-3.5 text-slate-500">
-                          {new Date().toLocaleDateString()}
+                          {new Date(item.createdAt).toLocaleDateString()}
                         </td>
-                        <td className="py-3.5 text-slate-600 font-mono text-[11px]">TXN-9823{idx}812</td>
-                        <td className="py-3.5 font-bold text-slate-900">₹{totalEarned > 0 ? (totalEarned / 4) : 500}</td>
+                        <td className="py-3.5 text-slate-600 font-mono text-[11px]">
+                          {item._id.substring(0, 8).toUpperCase()}
+                        </td>
+                        <td className="py-3.5 font-bold text-slate-900">₹{item.amount.toLocaleString()}</td>
                         <td className="py-3.5 text-right">
                           <span
                             className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border ${
-                              idx === 0
+                              item.status === 'pending'
                                 ? "bg-amber-50 text-amber-700 border-amber-200"
-                                : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                : item.status === 'approved'
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                : "bg-rose-50 text-rose-700 border-rose-200"
                             }`}
                           >
-                            {idx === 0 ? "Pending Approval" : "Settled to Bank"}
+                            {item.status === 'pending' ? "Pending Approval" : item.status === 'approved' ? "Settled to Bank" : "Rejected"}
                           </span>
                         </td>
                       </tr>
@@ -357,7 +375,7 @@ export default function ReportsPage() {
                 <span>Total Appointments</span>
                 <CalendarCheck className="w-4 h-4 text-sky-600" />
               </div>
-              <p className="text-2xl sm:text-3xl font-bold text-slate-900">124</p>
+              <p className="text-2xl sm:text-3xl font-bold text-slate-900">{totalAppointments}</p>
               <p className="text-xs font-medium text-slate-500">Lifetime scheduled</p>
             </div>
 
@@ -366,7 +384,7 @@ export default function ReportsPage() {
                 <span>Completed</span>
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               </div>
-              <p className="text-2xl sm:text-3xl font-bold text-emerald-700">112</p>
+              <p className="text-2xl sm:text-3xl font-bold text-emerald-700">{completedAppointments}</p>
               <p className="text-xs font-medium text-emerald-600">Successfully consulted</p>
             </div>
 
@@ -375,7 +393,7 @@ export default function ReportsPage() {
                 <span>Cancelled</span>
                 <Ban className="w-4 h-4 text-rose-600" />
               </div>
-              <p className="text-2xl sm:text-3xl font-bold text-rose-700">12</p>
+              <p className="text-2xl sm:text-3xl font-bold text-rose-700">{cancelledAppointments}</p>
               <p className="text-xs font-medium text-slate-500">No-shows or cancelled</p>
             </div>
 
@@ -384,7 +402,7 @@ export default function ReportsPage() {
                 <span>Unique Patients</span>
                 <Users className="w-4 h-4 text-[#1E4E70]" />
               </div>
-              <p className="text-2xl sm:text-3xl font-bold text-[#1E4E70]">86</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#1E4E70]">{uniquePatients}</p>
               <p className="text-xs font-medium text-[#1E4E70]/70">Distinct babies seen</p>
             </div>
           </div>
@@ -460,9 +478,9 @@ export default function ReportsPage() {
 
       {/* Withdrawal Request Modal */}
       {showWithdrawalModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4 sm:p-0 animate-fadeIn" onClick={() => setShowWithdrawalModal(false)}>
+          <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden relative z-10 animate-slideUp transform transition-transform max-h-[85vh] flex flex-col font-sans" onClick={(e) => e.stopPropagation()}>
+            <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-20">
               <h2 className="font-bold text-slate-800 flex items-center gap-2">
                 <Wallet className="w-4 h-4 text-[#1E4E70]" />
                 Request Withdrawal
@@ -505,6 +523,22 @@ export default function ReportsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Global Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] animate-slideUp">
+          <div className={`px-5 py-3 rounded-full shadow-lg border flex items-center gap-2.5 text-sm font-semibold
+            ${toastMessage.type === 'success' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 
+              toastMessage.type === 'error' ? 'bg-rose-50 text-rose-700 border-rose-200' : 
+              'bg-slate-800 text-white border-slate-700'
+            }
+          `}>
+            {toastMessage.type === 'success' && <CheckCircle2 className="w-4 h-4" />}
+            {toastMessage.type === 'error' && <Ban className="w-4 h-4" />}
+            {toastMessage.title}
           </div>
         </div>
       )}
