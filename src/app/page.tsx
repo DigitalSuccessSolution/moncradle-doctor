@@ -22,7 +22,7 @@ import {
   IndianRupee,
 } from "lucide-react";
 import { useDoctorData } from "@/context/DoctorDataContext";
-import { appointmentService } from "@/services/appointmentService";
+import { appointmentService, transformBackendAppointmentToFrontend } from "@/services/appointmentService";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 
@@ -125,9 +125,38 @@ export default function Dashboard() {
   };
 
   const todayAppointments = appointments.filter(
-    (apt) => apt.date === "2026-07-31" || apt.status === "Upcoming"
+    (apt) => apt.date === "2026-07-31" || apt.status.toLowerCase() === "upcoming" || apt.status.toLowerCase() === "scheduled"
   );
   const attentionPatient = patients.find((p) => p.status === "Attention");
+
+  useEffect(() => {
+    // Fetch top 5 upcoming appointments to populate dashboard initially
+    const fetchDashboardAppointments = async () => {
+      try {
+        const res = await appointmentService.fetchAppointments({ limit: 5, status_in: ["scheduled"] });
+        if (res.success && Array.isArray(res.data)) {
+          const list = res.data.map((app: any) => {
+            const transformed = transformBackendAppointmentToFrontend(app);
+            const doctor = typeof app.doctorId === "object" && app.doctorId !== null ? app.doctorId : {};
+            return {
+              ...transformed,
+              fee: doctor.consultationFee || 500,
+            };
+          });
+          if (setAppointments) {
+            setAppointments(list);
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to fetch dashboard appointments:", err);
+      }
+    };
+    
+    // Only fetch if we are currently holding the mock data (length 4 from INITIAL_APPOINTMENTS) or empty
+    if (appointments.length <= 4) {
+      fetchDashboardAppointments();
+    }
+  }, []);
 
   if (isDataLoading) {
     return (

@@ -27,7 +27,7 @@ export default function PageTransitionLoader() {
         <div className="w-32 h-32 sm:w-36 sm:h-36 relative z-10 flex items-center justify-center">
           <Image
             src="/moncradle-icon.png"
-            alt="Moncradel"
+            alt="Moncradle"
             width={144}
             height={144}
             className="w-full h-full object-contain drop-shadow-sm"

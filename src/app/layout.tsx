@@ -13,13 +13,13 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "MONCRADEL - Doctor Portal",
+  title: "MONCRADLE - Doctor Portal",
   description: "Pediatric Growth Tracking, Nutrition & Clinical Portal for Doctors",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "MONCRADEL Doctor",
+    title: "MONCRADLE Doctor",
   },
 };
 

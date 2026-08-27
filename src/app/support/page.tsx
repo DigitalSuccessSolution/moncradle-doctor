@@ -18,7 +18,7 @@ const faqs = [
     answer: "Submit a ticket choosing category 'Assign New Parent / Child Patient Account' with the parent's phone number or child's registration code. Super Admin will link the patient to your portal within 2 hours.",
   },
   {
-    question: "Is the Moncradel Doctor Portal free to use for pediatricians?",
+    question: "Is the Moncradle Doctor Portal free to use for pediatricians?",
     answer: "Yes! Core clinical intake, WHO z-score growth percentile calculation, e-prescriptions, and nutrition charts are 100% complimentary.",
   },
   {

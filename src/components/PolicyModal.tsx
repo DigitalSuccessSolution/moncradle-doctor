@@ -23,10 +23,10 @@ export default function PolicyModal() {
     privacy: "Privacy Policy & Clinical Data Protection",
     terms: "Terms & Conditions of Service",
     partner: "Register as a Doctor Partner",
-    contact: "Contact MONCRADEL Clinical Desk",
+    contact: "Contact MONCRADLE Clinical Desk",
     team: "Our Medical Advisory & Development Team",
     faq: "Frequently Asked Questions (FAQ)",
-    rate: "Rate & Review MONCRADEL PWA",
+    rate: "Rate & Review MONCRADLE PWA",
     blogs: "Clinical Pediatrics & Growth Research Blogs",
   };
 
@@ -49,7 +49,7 @@ export default function PolicyModal() {
               )}
             </div>
             <h3 className="font-semibold text-slate-900 text-base leading-tight">
-              {titles[activePolicy] || "MONCRADEL Information"}
+              {titles[activePolicy] || "MONCRADLE Information"}
             </h3>
           </div>
           <button
@@ -66,7 +66,7 @@ export default function PolicyModal() {
             <div className="space-y-3">
               <h4 className="font-semibold text-sm text-[#1E4E70]">1. Pediatric Clinical Data Encrypted Storage</h4>
               <p>
-                MONCRADEL Doctor PWA ensures all patient charts, WHO growth percentile records, and e-prescriptions are encrypted using AES-256 both in transit and at rest.
+                MONCRADLE Doctor PWA ensures all patient charts, WHO growth percentile records, and e-prescriptions are encrypted using AES-256 both in transit and at rest.
               </p>
               <h4 className="font-semibold text-sm text-[#1E4E70]">2. Offline IndexedDB & Local PWA Storage</h4>
               <p>
@@ -83,25 +83,25 @@ export default function PolicyModal() {
             <div className="space-y-3">
               <h4 className="font-semibold text-sm text-[#1E4E70]">1. Clinical Responsibility</h4>
               <p>
-                The MONCRADEL Doctor Portal provides growth velocity calculation and digital prescription tools to assist medical decisions. Final diagnosis remains the sole responsibility of the registered physician.
+                The MONCRADLE Doctor Portal provides growth velocity calculation and digital prescription tools to assist medical decisions. Final diagnosis remains the sole responsibility of the registered physician.
               </p>
               <h4 className="font-semibold text-sm text-[#1E4E70]">2. License Verification</h4>
               <p>
-                Doctors registering on MONCRADEL must possess valid state medical council registration (MD/DCH/MBBS) for issuing e-prescriptions.
+                Doctors registering on MONCRADLE must possess valid state medical council registration (MD/DCH/MBBS) for issuing e-prescriptions.
               </p>
             </div>
           )}
 
           {activePolicy === "partner" && (
             <div className="space-y-3">
-              <h4 className="font-semibold text-sm text-[#1E4E70]">Partner with MONCRADEL Clinical Network</h4>
+              <h4 className="font-semibold text-sm text-[#1E4E70]">Partner with MONCRADLE Clinical Network</h4>
               <p>
                 Join over 2,500+ pediatricians and child nutritionists utilizing automated WHO z-score growth tracking and instant parent notification tools.
               </p>
               <div className="bg-[#F8F9FA] p-4 rounded-lg border border-slate-200 space-y-2">
                 <p className="font-semibold text-slate-800">Partner Benefits:</p>
                 <ul className="list-disc pl-4 space-y-1 text-slate-600">
-                  <li>Direct patient referrals from MONCRADEL Parent PWA</li>
+                  <li>Direct patient referrals from MONCRADLE Parent PWA</li>
                   <li>Integrated digital e-prescriptions & diet charts</li>
                   <li>PWA offline intake capabilities during clinic visits</li>
                 </ul>
@@ -112,7 +112,7 @@ export default function PolicyModal() {
           {activePolicy === "faq" && (
             <div className="space-y-3">
               <div>
-                <h5 className="font-semibold text-slate-900 text-xs">Q: Is MONCRADEL Doctor PWA free to use?</h5>
+                <h5 className="font-semibold text-slate-900 text-xs">Q: Is MONCRADLE Doctor PWA free to use?</h5>
                 <p className="text-slate-600 mt-0.5">Yes, standard clinical intake, WHO growth curve charting, and e-prescriptions are complimentary for pediatric practitioners.</p>
               </div>
               <div>
@@ -130,10 +130,10 @@ export default function PolicyModal() {
             <div className="space-y-3">
               <p>For urgent clinical portal support or account onboarding assistance, contact our team:</p>
               <div className="bg-[#F8F9FA] p-4 rounded-lg border border-slate-200 space-y-2">
-                <p className="font-semibold text-slate-800">MONCRADEL Doctor Support Desk</p>
-                <p className="text-slate-600">Email: doctor-support@moncradel.com</p>
+                <p className="font-semibold text-slate-800">MONCRADLE Doctor Support Desk</p>
+                <p className="text-slate-600">Email: doctor-support@moncradle.com</p>
                 <p className="text-slate-600">Phone: +91 1800-419-8800 (Mon-Sat, 9 AM - 8 PM)</p>
-                <p className="text-slate-600">HQ: MONCRADEL Pediatric Health, Tech Park, New Delhi, India</p>
+                <p className="text-slate-600">HQ: MONCRADLE Pediatric Health, Tech Park, New Delhi, India</p>
               </div>
             </div>
           )}
@@ -161,7 +161,7 @@ export default function PolicyModal() {
                   <Star key={s} className="w-7 h-7 fill-amber-400" />
                 ))}
               </div>
-              <p className="font-semibold text-slate-900 text-sm">Rate MONCRADEL Doctor Portal</p>
+              <p className="font-semibold text-slate-900 text-sm">Rate MONCRADLE Doctor Portal</p>
               <p className="text-xs text-slate-500">Your feedback helps us refine clinical intake tools and growth charts.</p>
             </div>
           )}

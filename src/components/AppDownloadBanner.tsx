@@ -15,7 +15,7 @@ export default function AppDownloadBanner({ onOpenDownloadModal }: { onOpenDownl
           <Smartphone className="w-4 h-4" />
         </div>
         <div className="min-w-0 truncate">
-          <p className="font-semibold text-white text-xs truncate">Download MONCRADEL Doctor App</p>
+          <p className="font-semibold text-white text-xs truncate">Download MONCRADLE Doctor App</p>
           <p className="text-[10px] text-slate-400 truncate hidden sm:block">
             For exclusive clinical features, instant WHO alerts & offline intake
           </p>

@@ -46,6 +46,7 @@ const STEPS = [
 export default function EditDoctorProfilePage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
   const { doctorProfile, updateDoctorProfile, isAuthenticated, isProfileComplete, approvalStatus, setShowLoginModal, setApprovalStatus } = useDoctorData();
 
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -54,8 +55,6 @@ export default function EditDoctorProfilePage() {
   const [qualificationsText, setQualificationsText] = useState(doctorProfile?.specialization || "");
   const [languagesText, setLanguagesText] = useState(doctorProfile?.languagesSpoken?.join(", ") || "");
   const [consultationFee, setConsultationFee] = useState<number | "">(doctorProfile?.consultationFee || "");
-  const [timingStart, setTimingStart] = useState("09:00");
-  const [timingEnd, setTimingEnd] = useState("17:00");
 
   // Bank details matching Postman PUT /api/users/profile
   const [bankAccountName, setBankAccountName] = useState(doctorProfile?.fullName || "");
@@ -85,6 +84,7 @@ export default function EditDoctorProfilePage() {
       if (doctorProfile.consultationFee) {
         setConsultationFee(doctorProfile.consultationFee);
       }
+      
       if (doctorProfile.bankDetails) {
         if (doctorProfile.bankDetails.accountName) setBankAccountName(doctorProfile.bankDetails.accountName);
         if (doctorProfile.bankDetails.accountNumber) setBankAccountNumber(doctorProfile.bankDetails.accountNumber);
@@ -161,6 +161,15 @@ export default function EditDoctorProfilePage() {
     }
   };
 
+  useEffect(() => {
+    if (tabsContainerRef.current) {
+      const activeTab = tabsContainerRef.current.querySelector(`[data-step="${currentStep}"]`);
+      if (activeTab) {
+        activeTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      }
+    }
+  }, [currentStep]);
+
   const handleSubmit = async (e?: React.FormEvent, shouldRedirect: boolean = true) => {
     if (e) e.preventDefault();
     setIsSubmitting(true);
@@ -186,10 +195,6 @@ export default function EditDoctorProfilePage() {
       languagesSpoken: languagesArr,
       consultationFee: Number(consultationFee) || 0,
       isAvailable: true,
-      timings: {
-        start: timingStart || "09:00",
-        end: timingEnd || "17:00",
-      },
       bankDetails: {
         accountName: bankAccountName || formData.fullName || "",
         accountNumber: bankAccountNumber || "",
@@ -368,7 +373,7 @@ export default function EditDoctorProfilePage() {
         <div className="w-full lg:w-72 shrink-0 space-y-3 lg:sticky lg:top-24 z-10">
           <h2 className="hidden lg:block text-lg font-bold text-slate-800 mb-4 px-1">Edit Profile</h2>
           
-          <div className="flex lg:flex-col gap-2 sm:gap-3 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 thin-scrollbar w-full">
+          <div ref={tabsContainerRef} className="flex lg:flex-col gap-2 sm:gap-3 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 thin-scrollbar w-full">
             {STEPS.map((step) => {
               const Icon = step.icon;
               const isActive = currentStep === step.id;
@@ -376,6 +381,7 @@ export default function EditDoctorProfilePage() {
               return (
                 <button
                   key={step.id}
+                  data-step={step.id}
                   onClick={() => setCurrentStep(step.id)}
                   disabled={!isProfileComplete && currentStep < step.id}
                   className={`flex items-center gap-3 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl text-left transition-all shrink-0 lg:w-full border cursor-pointer ${
@@ -539,7 +545,7 @@ export default function EditDoctorProfilePage() {
                     required
                     readOnly
                     value={formData.email || ""}
-                    placeholder="dr.sumitsahu@moncradel.com"
+                    placeholder="dr.sumitsahu@moncradle.com"
                     className="w-full text-xs sm:text-sm font-medium px-4 py-3 bg-slate-100 border border-slate-200 rounded-lg focus:outline-none text-slate-500 cursor-not-allowed opacity-90"
                   />
                 </div>
@@ -550,12 +556,14 @@ export default function EditDoctorProfilePage() {
                     <span>Mobile / Phone Number*</span>
                   </label>
                   <input
-                    type="tel"
+                    type="text"
+                    inputMode="numeric"
                     required
-                    readOnly
                     value={formData.phone || ""}
-                    placeholder="+91 98765 43211"
-                    className={`w-full text-xs sm:text-sm font-medium px-4 py-3 bg-slate-100 border ${fieldErrors.phone ? 'border-red-400' : 'border-slate-200'} rounded-lg focus:outline-none text-slate-500 cursor-not-allowed opacity-90`}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/[^0-9]/g, '') })}
+                    placeholder="9876543210"
+                    maxLength={10}
+                    className={`w-full text-xs sm:text-sm font-medium px-4 py-3 bg-[#F8FAFC] border ${fieldErrors.phone ? 'border-red-400' : 'border-slate-200'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4E70] focus:bg-white text-slate-900`}
                   />
                   {fieldErrors.phone && (
                     <p className="text-[10px] text-red-500 font-semibold mt-1 flex items-center gap-1">
@@ -684,7 +692,7 @@ export default function EditDoctorProfilePage() {
                   required
                   value={formData.hospital || ""}
                   onChange={(e) => setFormData({ ...formData, hospital: e.target.value })}
-                  placeholder="Moncradel Pediatric Care Hub"
+                  placeholder="Moncradle Pediatric Care Hub"
                   className="w-full text-xs sm:text-sm font-medium px-4 py-3 bg-[#F8FAFC] border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4E70] focus:bg-white text-slate-900"
                 />
               </div>
@@ -724,38 +732,11 @@ export default function EditDoctorProfilePage() {
                     <span>Consultation Fee (₹)</span>
                   </label>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
                     value={consultationFee || ""}
-                    onChange={(e) => setConsultationFee(Number(e.target.value.replace(/[^0-9]/g, '')) || 0)}
+                    onChange={(e) => setConsultationFee(Number(e.target.value.replace(/[^0-9]/g, '')) || "")}
                     placeholder="500"
-                    className="w-full text-xs sm:text-sm font-medium px-4 py-3 bg-[#F8FAFC] border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4E70] focus:bg-white text-slate-900"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 pt-1">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-[#1E4E70]" />
-                    <span>OPD Start Time</span>
-                  </label>
-                  <input
-                    type="time"
-                    value={timingStart}
-                    onChange={(e) => setTimingStart(e.target.value)}
-                    className="w-full text-xs sm:text-sm font-medium px-4 py-3 bg-[#F8FAFC] border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4E70] focus:bg-white text-slate-900"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-[#1E4E70]" />
-                    <span>OPD End Time</span>
-                  </label>
-                  <input
-                    type="time"
-                    value={timingEnd}
-                    onChange={(e) => setTimingEnd(e.target.value)}
                     className="w-full text-xs sm:text-sm font-medium px-4 py-3 bg-[#F8FAFC] border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4E70] focus:bg-white text-slate-900"
                   />
                 </div>

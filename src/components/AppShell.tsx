@@ -71,7 +71,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <Link href="/" className="flex items-center">
             <Image
               src="/complete-logo.png"
-              alt="Moncradel"
+              alt="Moncradle"
               width={150}
               height={41}
               className="h-9 w-auto object-contain"
@@ -94,7 +94,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1 px-4 sm:px-6 py-6 max-w-3xl mx-auto w-full">
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto w-full">
           {children}
         </main>
       </div>

@@ -96,7 +96,7 @@ export default function MobileWelcomeModal() {
   const handleFinish = () => {
     setShowWelcomeScreen(false);
     try {
-      sessionStorage.setItem("moncradel_doctor_welcome_done", "true");
+      sessionStorage.setItem("moncradle_doctor_welcome_done", "true");
     } catch (e) {}
   };
 

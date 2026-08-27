@@ -42,16 +42,16 @@ export default function Navigation({ mode }: NavigationProps) {
   // Authenticated Full Doctor Portal Navigation Items
   const primaryNavItems: NavItem[] = [
     { name: "Dashboard", href: "/", icon: LayoutGrid },
-    { name: "Patients", href: "/patients", icon: Users },
     { name: "Appointments", href: "/appointments", icon: Calendar },
+    { name: "Patients", href: "/patients", icon: Users },
+    { name: "Prescriptions", href: "/prescriptions", icon: FileText },
     { name: "Nutrition", href: "/nutrition", icon: Utensils },
   ];
 
   const secondaryNavItems: NavItem[] = [
-    { name: "Notifications", href: "/notifications", icon: Bell },
-    { name: "OPD Availability", href: "/profile/availability", icon: Calendar },
-    { name: "Prescriptions", href: "/prescriptions", icon: FileText },
     { name: "Reports", href: "/reports", icon: BarChart3 },
+    { name: "OPD Availability", href: "/profile/availability", icon: Calendar },
+    { name: "Notifications", href: "/notifications", icon: Bell },
     { name: "Support Desk", href: "/support", icon: Headphones },
     { name: "Profile", href: "/profile", icon: User },
   ];
@@ -87,7 +87,7 @@ export default function Navigation({ mode }: NavigationProps) {
             <Link href="/" className="flex items-center px-3 py-2">
               <Image
                 src="/complete-logo.png"
-                alt="Moncradel"
+                alt="Moncradle"
                 width={160}
                 height={44}
                 className="h-10 w-auto object-contain"
@@ -141,7 +141,7 @@ export default function Navigation({ mode }: NavigationProps) {
         <Link href="/" className="flex items-center px-3 py-2 shrink-0">
           <Image
             src="/complete-logo.png"
-            alt="Moncradel"
+            alt="Moncradle"
             width={160}
             height={44}
             className="h-10 w-auto object-contain"

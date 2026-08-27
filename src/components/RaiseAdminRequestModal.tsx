@@ -89,7 +89,7 @@ export default function RaiseAdminRequestModal() {
             </div>
             <h4 className="font-semibold text-slate-900 text-lg">Ticket Submitted to Super Admin!</h4>
             <p className="text-xs text-slate-600 max-w-sm mx-auto leading-relaxed">
-              Your request ticket has been dispatched to Moncradel Super Admin support. Priority: <strong className="text-[#1E4E70]">{priority}</strong>. Support team will resolve it within 2 hours.
+              Your request ticket has been dispatched to Moncradle Super Admin support. Priority: <strong className="text-[#1E4E70]">{priority}</strong>. Support team will resolve it within 2 hours.
             </p>
           </div>
         ) : (

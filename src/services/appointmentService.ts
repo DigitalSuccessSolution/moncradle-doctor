@@ -23,12 +23,6 @@ export function transformBackendAppointmentToFrontend(app: any): Appointment {
     typeof app.doctorId === "object" && app.doctorId !== null ? doctor._id || doctor.id : String(app.doctorId || "");
   const appIdStr = String(app._id || app.id);
 
-  // Map backend status ('scheduled' | 'completed' | 'cancelled') to UI Status
-  let uiStatus: "Upcoming" | "Completed" | "Cancelled" = "Upcoming";
-  if (app.status === "completed") uiStatus = "Completed";
-  else if (app.status === "cancelled") uiStatus = "Cancelled";
-  else uiStatus = "Upcoming";
-
   return {
     id: appIdStr,
     patientId: babyIdStr,
@@ -41,7 +35,7 @@ export function transformBackendAppointmentToFrontend(app: any): Appointment {
     doctorName: doctor.name || app.doctorName || "",
     date: app.date || "",
     time: app.time || "",
-    status: uiStatus,
+    status: app.status || "scheduled",
     type: app.type || "Consultation",
     notes: app.notes || "",
     doctorNotes: app.doctorNotes || "",
@@ -55,8 +49,27 @@ export const appointmentService = {
    * Fetch appointments list from backend
    * GET /api/appointments
    */
-  async fetchAppointments(): Promise<ApiResponse<any[]>> {
-    return apiFetch<any[]>(API_CONFIG.ENDPOINTS.APPOINTMENTS.LIST, {
+  async fetchAppointments(params?: { page?: number; limit?: number; search?: string; status_in?: string[] }): Promise<ApiResponse<any>> {
+    let url = API_CONFIG.ENDPOINTS.APPOINTMENTS.LIST;
+    
+    if (params) {
+      const searchParams = new URLSearchParams();
+      if (params.page) searchParams.append("page", params.page.toString());
+      if (params.limit) searchParams.append("limit", params.limit.toString());
+      if (params.search) searchParams.append("search", params.search);
+      
+      // Handle multiple statuses like ?status[in]=completed&status[in]=cancelled
+      if (params.status_in && params.status_in.length > 0) {
+        params.status_in.forEach(s => searchParams.append("status[in]", s));
+      }
+      
+      const queryString = searchParams.toString();
+      if (queryString) {
+        url += `?${queryString}`;
+      }
+    }
+
+    return apiFetch<any>(url, {
       method: "GET",
     });
   },

@@ -47,6 +47,15 @@ export default function LoginModal() {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [policyAccepted, setPolicyAccepted] = useState(false);
 
+  // Field-level Validation Errors for Registration
+  const [fieldErrors, setFieldErrors] = useState<{
+    doctorName?: string;
+    doctorEmail?: string;
+    mobileNumber?: string;
+    doctorPassword?: string;
+    policyAccepted?: string;
+  }>({});
+
   // Sign In Form Fields
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
@@ -109,6 +118,7 @@ export default function LoginModal() {
     numeric = numeric.slice(0, 10);
     setMobileNumber(numeric);
     if (errorMessage) setErrorMessage(null);
+    if (fieldErrors.mobileNumber) setFieldErrors(prev => ({ ...prev, mobileNumber: undefined }));
   };
 
   /**
@@ -117,15 +127,30 @@ export default function LoginModal() {
    */
   const handleSendRegisterOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!doctorEmail.trim()) {
-      setErrorMessage("Please enter a valid email address.");
-      return;
-    }
+    
+    const errors: any = {};
     if (!doctorName.trim()) {
-      setErrorMessage("Please enter Doctor Full Name.");
+      errors.doctorName = "Doctor Full Name is required.";
+    }
+    if (!doctorEmail.trim() || !/^\S+@\S+\.\S+$/.test(doctorEmail)) {
+      errors.doctorEmail = "Please enter a valid email address.";
+    }
+    if (mobileNumber.length !== 10) {
+      errors.mobileNumber = "10-digit mobile number is required.";
+    }
+    if (doctorPassword.length < 6) {
+      errors.doctorPassword = "Password must be at least 6 characters.";
+    }
+    if (!policyAccepted) {
+      errors.policyAccepted = "Please accept the Terms & Privacy Policy.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
       return;
     }
 
+    setFieldErrors({});
     setLoading(true);
     setErrorMessage(null);
     setSuccessMessage(null);
@@ -452,6 +477,7 @@ export default function LoginModal() {
     setForgotStep("request_email");
     setErrorMessage(null);
     setSuccessMessage(null);
+    setFieldErrors({});
     setOtp(["", "", "", ""]);
     setResetOtp(["", "", "", ""]);
   };
@@ -474,7 +500,7 @@ export default function LoginModal() {
           <div className="pt-2 pb-1 text-center flex flex-col items-center justify-center">
             <Image
               src="/complete-logo.png"
-              alt="Moncradel Logo"
+              alt="Moncradle Logo"
               width={160}
               height={44}
               className="h-9 sm:h-10 w-auto object-contain mx-auto"
@@ -533,63 +559,75 @@ export default function LoginModal() {
                   <div className="space-y-1.5 text-left">
                     <label className="text-xs font-semibold text-slate-700 block">Doctor Full Name*</label>
                     <div className="relative">
-                      <User className="w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 text-slate-400 shrink-0" />
+                      <User className={`w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 shrink-0 ${fieldErrors.doctorName ? 'text-rose-400' : 'text-slate-400'}`} />
                       <input
                         type="text"
                         placeholder="e.g. Dr. Sumit Sahu"
                         value={doctorName}
-                        onChange={(e) => setDoctorName(e.target.value)}
-                        className="w-full bg-[#F8FAFC] focus:bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1E4E70] focus:border-[#1E4E70] transition-colors"
+                        onChange={(e) => {
+                          setDoctorName(e.target.value);
+                          if (fieldErrors.doctorName) setFieldErrors(prev => ({ ...prev, doctorName: undefined }));
+                        }}
+                        className={`w-full bg-[#F8FAFC] focus:bg-white border rounded-xl pl-10 pr-4 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 transition-colors ${fieldErrors.doctorName ? 'border-rose-300 focus:ring-rose-400 focus:border-rose-400' : 'border-slate-200 focus:ring-[#1E4E70] focus:border-[#1E4E70]'}`}
                         required
                         autoFocus
                       />
                     </div>
+                    {fieldErrors.doctorName && <p className="text-[10px] text-rose-500 font-semibold mt-0.5 animate-fadeIn">{fieldErrors.doctorName}</p>}
                   </div>
 
                   {/* Email Input */}
                   <div className="space-y-1.5 text-left">
                     <label className="text-xs font-semibold text-slate-700 block">Email Address*</label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 text-slate-400 shrink-0" />
+                      <Mail className={`w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 shrink-0 ${fieldErrors.doctorEmail ? 'text-rose-400' : 'text-slate-400'}`} />
                       <input
                         type="email"
-                        placeholder="dr.sumitsahu@moncradel.com"
+                        placeholder="dr.sumitsahu@moncradle.com"
                         value={doctorEmail}
-                        onChange={(e) => setDoctorEmail(e.target.value)}
-                        className="w-full bg-[#F8FAFC] focus:bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1E4E70] focus:border-[#1E4E70] transition-colors"
+                        onChange={(e) => {
+                          setDoctorEmail(e.target.value);
+                          if (fieldErrors.doctorEmail) setFieldErrors(prev => ({ ...prev, doctorEmail: undefined }));
+                        }}
+                        className={`w-full bg-[#F8FAFC] focus:bg-white border rounded-xl pl-10 pr-4 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 transition-colors ${fieldErrors.doctorEmail ? 'border-rose-300 focus:ring-rose-400 focus:border-rose-400' : 'border-slate-200 focus:ring-[#1E4E70] focus:border-[#1E4E70]'}`}
                         required
                       />
                     </div>
+                    {fieldErrors.doctorEmail && <p className="text-[10px] text-rose-500 font-semibold mt-0.5 animate-fadeIn">{fieldErrors.doctorEmail}</p>}
                   </div>
 
                   {/* Phone Input */}
                   <div className="space-y-1.5 text-left">
                     <label className="text-xs font-semibold text-slate-700 block">Mobile Number*</label>
                     <div className="relative">
-                      <Phone className="w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 text-slate-400 shrink-0" />
+                      <Phone className={`w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 shrink-0 ${fieldErrors.mobileNumber ? 'text-rose-400' : 'text-slate-400'}`} />
                       <input
                         type="tel"
                         maxLength={15}
                         placeholder="98765 43210"
                         value={mobileNumber}
                         onChange={(e) => handleMobileChange(e.target.value)}
-                        className="w-full bg-[#F8FAFC] focus:bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1E4E70] focus:border-[#1E4E70] transition-colors"
+                        className={`w-full bg-[#F8FAFC] focus:bg-white border rounded-xl pl-10 pr-4 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 transition-colors ${fieldErrors.mobileNumber ? 'border-rose-300 focus:ring-rose-400 focus:border-rose-400' : 'border-slate-200 focus:ring-[#1E4E70] focus:border-[#1E4E70]'}`}
                         required
                       />
                     </div>
+                    {fieldErrors.mobileNumber && <p className="text-[10px] text-rose-500 font-semibold mt-0.5 animate-fadeIn">{fieldErrors.mobileNumber}</p>}
                   </div>
 
                   {/* Password Input with Show/Hide Toggle */}
                   <div className="space-y-1.5 text-left">
                     <label className="text-xs font-semibold text-slate-700 block">Password*</label>
                     <div className="relative">
-                      <Lock className="w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 text-slate-400 shrink-0" />
+                      <Lock className={`w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 shrink-0 ${fieldErrors.doctorPassword ? 'text-rose-400' : 'text-slate-400'}`} />
                       <input
                         type={showRegPassword ? "text" : "password"}
                         placeholder="••••••••"
                         value={doctorPassword}
-                        onChange={(e) => setDoctorPassword(e.target.value)}
-                        className="w-full bg-[#F8FAFC] focus:bg-white border border-slate-200 rounded-xl pl-10 pr-10 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1E4E70] focus:border-[#1E4E70] transition-colors"
+                        onChange={(e) => {
+                          setDoctorPassword(e.target.value);
+                          if (fieldErrors.doctorPassword) setFieldErrors(prev => ({ ...prev, doctorPassword: undefined }));
+                        }}
+                        className={`w-full bg-[#F8FAFC] focus:bg-white border rounded-xl pl-10 pr-10 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 transition-colors ${fieldErrors.doctorPassword ? 'border-rose-300 focus:ring-rose-400 focus:border-rose-400' : 'border-slate-200 focus:ring-[#1E4E70] focus:border-[#1E4E70]'}`}
                         required
                       />
                       <button
@@ -601,24 +639,31 @@ export default function LoginModal() {
                         {showRegPassword ? <EyeOff className="w-4 h-4 text-slate-400" /> : <Eye className="w-4 h-4 text-slate-400" />}
                       </button>
                     </div>
+                    {fieldErrors.doctorPassword && <p className="text-[10px] text-rose-500 font-semibold mt-0.5 animate-fadeIn">{fieldErrors.doctorPassword}</p>}
                   </div>
 
                   {/* Privacy Policy Checkbox */}
-                  <div className="flex items-start gap-2 pt-1 pb-2">
-                    <input
-                      type="checkbox"
-                      id="policy-checkbox"
-                      checked={policyAccepted}
-                      onChange={(e) => setPolicyAccepted(e.target.checked)}
-                      className="mt-0.5 w-3.5 h-3.5 rounded border-slate-300 text-[#1E4E70] focus:ring-[#1E4E70] cursor-pointer"
-                      required
-                    />
-                    <label htmlFor="policy-checkbox" className="text-xs text-slate-600 leading-snug cursor-pointer select-none">
-                      I have read and agree to the{" "}
-                      <Link href="/terms-of-service" target="_blank" className="font-semibold text-[#1E4E70] hover:underline" onClick={(e) => e.stopPropagation()}>Terms of Service</Link>
-                      {" "}and{" "}
-                      <Link href="/privacy-policy" target="_blank" className="font-semibold text-[#1E4E70] hover:underline" onClick={(e) => e.stopPropagation()}>Privacy Policy</Link>.
-                    </label>
+                  <div className="flex flex-col gap-1 pt-1 pb-2">
+                    <div className="flex items-start gap-2">
+                      <input
+                        type="checkbox"
+                        id="policy-checkbox"
+                        checked={policyAccepted}
+                        onChange={(e) => {
+                          setPolicyAccepted(e.target.checked);
+                          if (fieldErrors.policyAccepted) setFieldErrors(prev => ({ ...prev, policyAccepted: undefined }));
+                        }}
+                        className={`mt-0.5 w-3.5 h-3.5 rounded border-slate-300 text-[#1E4E70] cursor-pointer ${fieldErrors.policyAccepted ? 'border-rose-400 ring-1 ring-rose-400' : 'focus:ring-[#1E4E70]'}`}
+                        required
+                      />
+                      <label htmlFor="policy-checkbox" className={`text-xs leading-snug cursor-pointer select-none ${fieldErrors.policyAccepted ? 'text-rose-600' : 'text-slate-600'}`}>
+                        I have read and agree to the{" "}
+                        <Link href="/terms-of-service" target="_blank" className="font-semibold text-[#1E4E70] hover:underline" onClick={(e) => e.stopPropagation()}>Terms of Service</Link>
+                        {" "}and{" "}
+                        <Link href="/privacy-policy" target="_blank" className="font-semibold text-[#1E4E70] hover:underline" onClick={(e) => e.stopPropagation()}>Privacy Policy</Link>.
+                      </label>
+                    </div>
+                    {fieldErrors.policyAccepted && <p className="text-[10px] text-rose-500 font-semibold pl-5 animate-fadeIn">{fieldErrors.policyAccepted}</p>}
                   </div>
 
                   {/* SEND OTP TO EMAIL BUTTON */}
@@ -749,7 +794,7 @@ export default function LoginModal() {
                   <Mail className="w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 text-slate-400 shrink-0" />
                   <input
                     type="email"
-                    placeholder="dr.sumitsahu@moncradel.com"
+                    placeholder="dr.sumitsahu@moncradle.com"
                     value={signInEmail}
                     onChange={(e) => setSignInEmail(e.target.value)}
                     onKeyDown={(e) => {
@@ -872,7 +917,7 @@ export default function LoginModal() {
                       <Mail className="w-4 h-4 absolute left-3.5 top-3 sm:top-3.5 text-slate-400 shrink-0" />
                       <input
                         type="email"
-                        placeholder="dr.sumitsahu@moncradel.com"
+                        placeholder="dr.sumitsahu@moncradle.com"
                         value={forgotEmail}
                         onChange={(e) => setForgotEmail(e.target.value)}
                         className="w-full bg-[#F8FAFC] focus:bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 sm:py-4 text-xs sm:text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#1E4E70] focus:border-[#1E4E70] transition-colors"

@@ -42,7 +42,7 @@ export default function OfflineIndicator() {
         <div className="relative w-40 h-12 mb-8 opacity-60 grayscale hover:grayscale-0 transition-all">
           <img
             src="/complete-logo.png"
-            alt="Moncradel Logo"
+            alt="Moncradle Logo"
             className="w-full h-full object-contain"
           />
         </div>
