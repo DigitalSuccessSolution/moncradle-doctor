@@ -281,7 +281,9 @@ export default function PrescriptionsTab({
             <p className="text-center text-xs text-slate-400 py-6">No previous prescriptions recorded.</p>
           ) : (
             <div className="space-y-3">
-              {prescriptionList.map((rx) => {
+              {[...prescriptionList]
+                .sort((a, b) => new Date(b.date || b.createdAt || 0).getTime() - new Date(a.date || a.createdAt || 0).getTime())
+                .map((rx) => {
                 const getFreqLabel = (freq: string) => {
                   const labels: Record<string, string> = {
                     "1-0-0": "Morning",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,6 +14,7 @@ import {
   Activity,
   ArrowRight,
   ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 import { useDoctorData } from "@/context/DoctorDataContext";
 import { maskPhoneNumber } from "@/data/mockData";
@@ -29,6 +30,13 @@ export default function PatientDirectory() {
   const router = useRouter();
   const { patients } = useDoctorData();
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // Reset to first page when searching
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   const filteredPatients = patients.filter((patient) => {
     const term = searchTerm.toLowerCase();
@@ -39,6 +47,12 @@ export default function PatientDirectory() {
       (patient.medicalCondition && patient.medicalCondition.toLowerCase().includes(term))
     );
   });
+
+  const totalPages = Math.max(1, Math.ceil(filteredPatients.length / itemsPerPage));
+  const currentPatients = filteredPatients.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="space-y-6 animate-fadeIn pb-16 font-sans">
@@ -88,7 +102,7 @@ export default function PatientDirectory() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredPatients.map((child) => (
+              {currentPatients.map((child) => (
                 <tr
                   key={child.id}
                   onClick={() => router.push(`/patients/${child.id}`)}
@@ -182,7 +196,7 @@ export default function PatientDirectory() {
 
         {/* MOBILE CARDS LIST VIEW */}
         <div className="block md:hidden divide-y divide-slate-100">
-          {filteredPatients.map((child) => (
+          {currentPatients.map((child) => (
             <div
               key={child.id}
               onClick={() => router.push(`/patients/${child.id}`)}
@@ -249,9 +263,34 @@ export default function PatientDirectory() {
           ))}
         </div>
 
-        {filteredPatients.length === 0 && (
+        {filteredPatients.length === 0 ? (
           <div className="p-8 text-center text-slate-400 text-xs italic">
             No matching patient records found.
+          </div>
+        ) : (
+          <div className="p-4 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-xs text-slate-500 font-medium">
+              Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredPatients.length)} of {filteredPatients.length}
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="p-1.5 rounded-lg border border-slate-200 text-slate-500 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-xs font-semibold text-slate-700 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="p-1.5 rounded-lg border border-slate-200 text-slate-500 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         )}
 

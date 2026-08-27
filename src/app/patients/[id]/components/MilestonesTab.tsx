@@ -28,7 +28,9 @@ export default function MilestonesTab({ babyMilestones, milestonesLoading }: Mil
             </div>
           ) : (
             <div className="space-y-2.5">
-              {babyMilestones.map((m) => (
+              {[...babyMilestones]
+                .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+                .map((m) => (
                 <div key={m._id || m.id} className="flex items-center justify-between p-3 bg-emerald-50/60 border border-emerald-200 rounded-lg text-xs font-sans">
                   <div className="flex items-center gap-2.5">
                     <CheckCircle2 className="w-4.5 h-4.5 text-emerald-600" />

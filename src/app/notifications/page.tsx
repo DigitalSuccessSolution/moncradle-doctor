@@ -13,6 +13,7 @@ import {
   Volume2,
   Sparkles,
   ChevronRight,
+  ChevronLeft,
   ShieldAlert,
   X,
   RefreshCw,
@@ -40,6 +41,12 @@ export default function NotificationsPage() {
   const [isBulkDeleteMode, setIsBulkDeleteMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
 
   const fetchNotifications = async () => {
     setLoading(true);
@@ -124,6 +131,12 @@ export default function NotificationsPage() {
     if (filter === "read") return n.read;
     return true;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filteredNotifs.length / itemsPerPage));
+  const currentNotifs = filteredNotifs.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="space-y-6 animate-fadeIn pb-16 font-sans w-full max-w-full overflow-hidden">
@@ -234,7 +247,7 @@ export default function NotificationsPage() {
             </div>
           </div>
         ) : (
-          filteredNotifs.map((n) => {
+          currentNotifs.map((n) => {
             const isHigh = n.priority === "high";
             const Icon =
               n.type === "growth_alert"
@@ -345,6 +358,33 @@ export default function NotificationsPage() {
               </div>
             );
           })
+        )}
+
+        {filteredNotifs.length > 0 && (
+          <div className="p-4 bg-white border border-slate-200/80 rounded-xl flex items-center justify-between">
+            <span className="text-xs text-slate-500 font-medium">
+              Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredNotifs.length)} of {filteredNotifs.length}
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="p-1.5 rounded-lg border border-slate-200 text-slate-500 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-xs font-semibold text-slate-700 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="p-1.5 rounded-lg border border-slate-200 text-slate-500 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
         )}
       </div>
 
