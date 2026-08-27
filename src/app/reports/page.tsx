@@ -17,7 +17,9 @@ import {
   Wallet,
   Activity,
   CalendarCheck,
-  Ban
+  Ban,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { earningService, EarningApiResponse, EarningItem } from "@/services/earningService";
 import { analyticsService, DoctorAnalyticsResponse } from "@/services/analyticsService";
@@ -41,6 +43,12 @@ export default function ReportsPage() {
   const [earningsData, setEarningsData] = useState<EarningApiResponse | null>(null);
   const [withdrawalHistory, setWithdrawalHistory] = useState<WithdrawalItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
 
   // Withdrawal Modal State
   const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
@@ -93,8 +101,55 @@ export default function ReportsPage() {
   const cancelledAppointments = analyticsData?.clinical.cancelledAppointments ?? 0;
   const uniquePatients = analyticsData?.clinical.uniquePatients ?? 0;
 
+  const totalPages = Math.max(1, Math.ceil(withdrawalHistory.length / itemsPerPage));
+  const currentHistory = withdrawalHistory.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const downloadCSV = (filename: string, csvContent: string) => {
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleExportCSV = () => {
-    showToast("Exporting CSV started...", "info");
+    showToast(`Exporting ${activeTab} data...`, "info");
+    
+    if (activeTab === "financial") {
+      let csvContent = "Date,Transaction ID,Amount,Status\n";
+      if (withdrawalHistory && withdrawalHistory.length > 0) {
+        withdrawalHistory.forEach(item => {
+           const date = new Date(item.createdAt).toLocaleDateString();
+           const id = item._id;
+           const amount = item.amount;
+           const status = item.status;
+           csvContent += `"${date}","${id}","${amount}","${status}"\n`;
+        });
+      } else {
+        csvContent += "No records found\n";
+      }
+      downloadCSV("financial_report.csv", csvContent);
+    } else if (activeTab === "clinical") {
+      let csvContent = "Metric,Value\n";
+      csvContent += `"Total Appointments","${totalAppointments}"\n`;
+      csvContent += `"Completed Appointments","${completedAppointments}"\n`;
+      csvContent += `"Cancelled Appointments","${cancelledAppointments}"\n`;
+      csvContent += `"Unique Patients","${uniquePatients}"\n`;
+      
+      csvContent += `\nWeek,Scheduled,Completed\n`;
+      if (clinicalGraphData && clinicalGraphData.length > 0) {
+         clinicalGraphData.forEach((item: any) => {
+           csvContent += `"${item.name}","${item.appointments}","${item.completed}"\n`;
+         });
+      }
+      downloadCSV("clinical_report.csv", csvContent);
+    }
   };
 
   const handleRequestWithdrawal = async (e: React.FormEvent) => {
@@ -351,7 +406,7 @@ export default function ReportsPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 font-medium">
-                    {withdrawalHistory.map((item, idx) => (
+                    {currentHistory.map((item, idx) => (
                       <tr key={item._id} className="hover:bg-slate-50/50">
                         <td className="py-3.5 text-slate-500">
                           {new Date(item.createdAt).toLocaleDateString()}
@@ -377,6 +432,32 @@ export default function ReportsPage() {
                     ))}
                   </tbody>
                 </table>
+                {withdrawalHistory.length > 0 && (
+                  <div className="p-4 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-xs text-slate-500 font-medium">
+                      Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, withdrawalHistory.length)} of {withdrawalHistory.length}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                        className="p-1.5 rounded-lg border border-slate-200 text-slate-500 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <span className="text-xs font-semibold text-slate-700 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                        Page {currentPage} of {totalPages}
+                      </span>
+                      <button
+                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                        className="p-1.5 rounded-lg border border-slate-200 text-slate-500 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

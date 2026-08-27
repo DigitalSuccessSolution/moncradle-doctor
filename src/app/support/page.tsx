@@ -63,7 +63,8 @@ export default function SupportPage() {
     const token = getStoredToken();
     if (!token) return;
 
-    const backendUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api').replace('/api', '');
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const backendUrl = new URL(apiUrl).origin;
     const newSocket = io(backendUrl, { auth: { token } });
     setSocket(newSocket);
 
@@ -102,12 +103,24 @@ export default function SupportPage() {
 
   // Join the ticket rooms whenever tickets change or socket connects
   useEffect(() => {
-    if (socket && socket.connected) {
+    if (!socket) return;
+    
+    const joinRooms = () => {
       tickets.forEach((ticket) => {
         const tId = ticket._id || ticket.id;
         if (tId) socket.emit('join_ticket_room', tId);
       });
+    };
+
+    socket.on('connect', joinRooms);
+    
+    if (socket.connected) {
+      joinRooms();
     }
+
+    return () => {
+      socket.off('connect', joinRooms);
+    };
   }, [socket, tickets]);
 
   // Handle outside click for dropdown
@@ -122,7 +135,7 @@ export default function SupportPage() {
   }, []);
 
   useEffect(() => {
-    fetchTickets(1, false);
+    fetchTickets();
   }, []);
 
   const fetchTickets = async () => {

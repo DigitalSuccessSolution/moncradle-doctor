@@ -55,42 +55,25 @@ export default function GrowthTab({
   return (
     <div className="space-y-8">
       {/* Header Area */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-xl font-bold text-slate-800">Growth Chart</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+        <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+          <Activity className="w-6 h-6 text-[#10B981]" />
+          Growth Records
+        </h2>
         
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center bg-white rounded-full p-1 border border-slate-200/80 shadow-xs">
-            <button
-              onClick={() => setChartType("height")}
-              className={`px-4 py-1.5 text-xs font-semibold rounded-full transition-all ${
-                chartType === "height"
-                  ? "bg-[#10B981] text-white shadow-sm"
-                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
-              }`}
-            >
-              Height Chart
-            </button>
-            <button
-              onClick={() => setChartType("weight")}
-              className={`px-4 py-1.5 text-xs font-semibold rounded-full transition-all ${
-                chartType === "weight"
-                  ? "bg-[#10B981] text-white shadow-sm"
-                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
-              }`}
-            >
-              Weight Chart
-            </button>
-          </div>
-          
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 bg-[#818CF8] hover:bg-[#6366F1] text-white px-4 py-2 rounded-full text-xs font-semibold transition-colors shadow-sm cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Add Entry</span>
-          </button>
-        </div>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-1.5 bg-[#10B981] hover:bg-[#059669] text-white px-5 py-2 rounded-md text-sm font-semibold transition-colors shadow-sm cursor-pointer"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Add Record</span>
+        </button>
       </div>
+
+      <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
+        {/* Chart Section */}
+        <div className="p-6 border-b border-slate-100">
+          <h3 className="font-bold text-slate-700 text-sm mb-6">Growth Chart</h3>
 
       {/* WHO Growth Curve Chart */}
       <div className="w-full">
@@ -99,24 +82,13 @@ export default function GrowthTab({
           currentWeight={patient.weight !== undefined ? Number(patient.weight) : undefined}
           currentHeight={patient.height !== undefined ? Number(patient.height) : undefined}
           ageInMonths={patient.ageInMonths !== undefined ? Number(patient.ageInMonths) : undefined}
-          records={growthRecords.map((r) => {
-            let recordMonth = r.headCircumference; // Fallback
-            if (patient.dateOfBirth && r.createdAt) {
-              const birth = new Date(patient.dateOfBirth);
-              const recDate = new Date(r.createdAt);
-              const months = (recDate.getFullYear() - birth.getFullYear()) * 12 + (recDate.getMonth() - birth.getMonth());
-              recordMonth = months;
-            }
-            return { weight: r.weight, height: r.height, month: recordMonth, createdAt: r.createdAt };
-          })}
+          records={growthRecords}
         />
+      </div>
       </div>
 
       {/* Table of previous growth logs */}
-      <div className="bg-white rounded-xl p-5 border border-slate-200/80 shadow-xs space-y-4">
-          <h3 className="font-bold text-slate-900 text-sm uppercase tracking-wider">
-            Vitals & Growth History List
-          </h3>
+      <div className="p-0">
 
           {growthLoading ? (
             <p className="text-center text-xs text-slate-400 py-6">Loading logs...</p>
@@ -136,7 +108,9 @@ export default function GrowthTab({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 font-semibold text-slate-700">
-                  {growthRecords.map((rec) => (
+                  {[...growthRecords]
+                    .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+                    .map((rec) => (
                     <tr key={rec._id || rec.id} className="hover:bg-slate-50/50">
                       <td className="py-2.5 px-3">
                         {rec.createdAt ? String(rec.createdAt).split("T")[0] : "N/A"}
@@ -162,6 +136,7 @@ export default function GrowthTab({
             </div>
           )}
         </div>
+      </div>
 
       {/* Add New Entry Modal */}
       {isModalOpen && typeof document !== "undefined" && createPortal(
