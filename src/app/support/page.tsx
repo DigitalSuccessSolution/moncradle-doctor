@@ -11,26 +11,21 @@ import Swal from "sweetalert2";
 import { io, Socket } from 'socket.io-client';
 import { supportService, SupportTicket } from "@/services/supportService";
 import { getStoredToken } from "@/services/authService";
-
-const faqs = [
-  {
-    question: "How do I request a new Parent or Child patient account to be assigned to me?",
-    answer: "Submit a ticket choosing category 'Assign New Parent / Child Patient Account' with the parent's phone number or child's registration code. Super Admin will link the patient to your portal within 2 hours.",
-  },
-  {
-    question: "Is the Moncradle Doctor Portal free to use for pediatricians?",
-    answer: "Yes! Core clinical intake, WHO z-score growth percentile calculation, e-prescriptions, and nutrition charts are 100% complimentary.",
-  },
-  {
-    question: "How do payouts work for completed tele-consultations?",
-    answer: "Payout settlements are calculated weekly and transferred directly to the bank account saved in your Doctor Profile.",
-  }
-];
+import { faqService, Faq } from "@/services/faqService";
 
 export default function SupportPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearchQuery(searchQuery), 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [faqs, setFaqs] = useState<Faq[]>([]);
+  const [faqsLoading, setFaqsLoading] = useState(true);
 
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [totalTicketsCount, setTotalTicketsCount] = useState(0);
@@ -136,6 +131,7 @@ export default function SupportPage() {
 
   useEffect(() => {
     fetchTickets();
+    faqService.getFaqs().then((data) => { setFaqs(data); setFaqsLoading(false); });
   }, []);
 
   const fetchTickets = async () => {
@@ -334,8 +330,8 @@ export default function SupportPage() {
   }, [selectedChatTicket, socket]);
 
   const filteredFaqs = faqs.filter(faq =>
-    faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
+    faq.question.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+    faq.answer.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
   );
 
   // Pagination Logic
@@ -390,9 +386,17 @@ export default function SupportPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for answers..."
-                className="w-full py-3 md:py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl md:rounded-2xl text-[14px] md:text-[15px] font-medium text-white placeholder:text-white/60 focus:outline-none focus:bg-white/20 focus:text-white focus:placeholder:text-white/60 transition-all pl-11 md:pl-12 pr-4 md:pr-5"
+                className="w-full pl-11 md:pl-12 pr-10 md:pr-12 py-3 md:py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl md:rounded-2xl text-[14px] md:text-[15px] font-semibold text-white placeholder:text-white/60 focus:outline-none focus:bg-white focus:text-gray-900 focus:placeholder:text-gray-400 transition-all shadow-sm"
               />
               <Search className={`w-4 h-4 md:w-5 md:h-5 absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 transition-colors ${searchQuery ? 'text-gray-400' : 'text-white/80'}`} />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+                >
+                  <X className="w-4 h-4 md:w-5 md:h-5" />
+                </button>
+              )}
             </div>
           </div>
         </section>
@@ -410,8 +414,8 @@ export default function SupportPage() {
                     <MessageSquareText className="w-4 h-4 md:w-5 md:h-5" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900 text-[11px] md:text-[14px] leading-tight">New Ticket</h4>
-                    <p className="text-[10px] md:text-xs text-gray-500 mt-0.5 hidden md:block">We reply within 24h</p>
+                    <h4 className="font-medium text-gray-900 text-sm md:text-base leading-tight">New Ticket</h4>
+                    <p className="text-xs md:text-sm text-gray-500 mt-0.5 hidden md:block">We reply within 24h</p>
                   </div>
                 </div>
 
@@ -420,8 +424,8 @@ export default function SupportPage() {
                     <Mail className="w-4 h-4 md:w-5 md:h-5" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900 text-[11px] md:text-[14px] leading-tight">Email Us</h4>
-                    <p className="text-[10px] md:text-xs text-gray-500 mt-0.5 hidden md:block">support@moncradle.com</p>
+                    <h4 className="font-medium text-gray-900 text-sm md:text-base leading-tight">Email Us</h4>
+                    <p className="text-xs md:text-sm text-gray-500 mt-0.5 hidden md:block">support@moncradle.com</p>
                   </div>
                 </a>
 
@@ -430,8 +434,8 @@ export default function SupportPage() {
                     <Phone className="w-4 h-4 md:w-5 md:h-5" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900 text-[11px] md:text-[14px] leading-tight">Call Us</h4>
-                    <p className="text-[10px] md:text-xs text-gray-500 mt-0.5 hidden md:block">+91 1800-402-9900</p>
+                    <h4 className="font-medium text-gray-900 text-sm md:text-base leading-tight">Call Us</h4>
+                    <p className="text-xs md:text-sm text-gray-500 mt-0.5 hidden md:block">+91 1800-402-9900</p>
                   </div>
                 </a>
               </div>
@@ -466,12 +470,12 @@ export default function SupportPage() {
                         <div key={tId} className="p-4 bg-white border border-gray-100 rounded-xl hover:border-gray-200 transition-colors">
                           <div className="flex justify-between items-center mb-1.5">
                             <h4 className="font-medium text-gray-900 capitalize text-sm md:text-base">{ticket.subject || ticket.issueType || "Support Ticket"}</h4>
-                            <span className={`text-[9px] md:text-[10px] font-medium px-2 py-0.5 rounded-md uppercase tracking-wider shrink-0 ml-2 ${ticket.status === 'open' ? 'bg-orange-100 text-orange-600' : ticket.status === 'in_progress' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'}`}>{(ticket.status || "open").replace('_',' ')}</span>
+                            <span className={`text-xs font-medium px-2 py-0.5 rounded-md uppercase tracking-wider shrink-0 ml-2 ${ticket.status === 'open' ? 'bg-orange-100 text-orange-600' : ticket.status === 'in_progress' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'}`}>{(ticket.status || "open").replace('_',' ')}</span>
                           </div>
-                          <p className="text-xs md:text-sm text-gray-500 font-medium mb-3 line-clamp-2">{ticket.description || ticket.message}</p>
+                          <p className="text-sm md:text-base text-gray-500 font-medium mb-3 line-clamp-2">{ticket.description || ticket.message}</p>
                           <div className="flex items-center justify-between">
-                            <p className="text-[10px] md:text-xs text-gray-400 font-medium">{new Date(ticket.createdAt || new Date()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                            <button onClick={() => setSelectedChatTicket(ticket)} className="text-xs md:text-sm font-medium text-[#1E4E70] bg-[#1E4E70]/10 px-2.5 py-1 md:px-3 md:py-1.5 rounded-lg hover:bg-[#1E4E70]/20 transition-colors">View Chat</button>
+                            <p className="text-xs md:text-sm text-gray-400 font-medium">{new Date(ticket.createdAt || new Date()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                            <button onClick={() => setSelectedChatTicket(ticket)} className="text-sm md:text-base font-medium text-[#1E4E70] bg-[#1E4E70]/10 px-2.5 py-1 md:px-3 md:py-1.5 rounded-lg hover:bg-[#1E4E70]/20 transition-colors">View Chat</button>
                           </div>
                         </div>
                       )
@@ -500,9 +504,18 @@ export default function SupportPage() {
                 <h2 className="text-base md:text-xl font-medium text-gray-900">Frequently Asked Questions</h2>
               </div>
 
-              {filteredFaqs.length === 0 ? (
+              {faqsLoading ? (
+                <div className="space-y-2">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="h-12 bg-gray-100 rounded-xl animate-pulse" />
+                  ))}
+                </div>
+              ) : filteredFaqs.length === 0 ? (
                 <div className="text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                  <p className="text-xs md:text-sm text-gray-500 font-medium">No answers found for "{searchQuery}".<br />Please try a different keyword.</p>
+                  <p className="text-sm md:text-base text-gray-500 font-medium">
+                    {searchQuery ? `No answers found for "${searchQuery}".` : "No FAQs available yet."}<br />
+                    {searchQuery && "Please try a different keyword."}
+                  </p>
                 </div>
               ) : (
                 <div className="divide-y divide-gray-100">
@@ -511,7 +524,7 @@ export default function SupportPage() {
                     return (
                       <div key={index} className={`transition-all duration-300 ${isOpen ? 'bg-[#1E4E70]/5 rounded-xl md:rounded-2xl' : 'hover:bg-gray-50 rounded-xl md:rounded-2xl'}`}>
                         <button onClick={() => toggleFaq(index)} className="w-full flex items-center justify-between p-3.5 md:p-5 text-left cursor-pointer focus:outline-none">
-                          <span className={`font-medium text-[13px] md:text-[15px] pr-3 md:pr-4 ${isOpen ? 'text-[#1E4E70]' : 'text-gray-800'}`}>
+                          <span className={`font-medium text-sm md:text-base pr-3 md:pr-4 ${isOpen ? 'text-[#1E4E70]' : 'text-gray-800'}`}>
                             {faq.question}
                           </span>
                           <div className={`shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center transition-colors ${isOpen ? 'bg-[#1E4E70] text-white' : 'bg-gray-100 text-gray-500'}`}>
@@ -519,7 +532,7 @@ export default function SupportPage() {
                           </div>
                         </button>
                         <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
-                          <div className="px-3.5 md:px-5 pb-3.5 md:pb-5 text-[12px] md:text-sm text-gray-600 leading-relaxed font-medium">
+                          <div className="px-3.5 md:px-5 pb-3.5 md:pb-5 text-sm md:text-base text-gray-600 leading-relaxed font-medium">
                             {faq.answer}
                           </div>
                         </div>
@@ -604,8 +617,8 @@ export default function SupportPage() {
                 <div className="flex items-center gap-3">
                   <button onClick={() => setSelectedChatTicket(null)} className="md:hidden"><ChevronLeft className="w-6 h-6" /></button>
                   <div>
-                    <h3 className="font-medium text-[16px] capitalize">{selectedChatTicket.subject || selectedChatTicket.issueType?.replace('_', ' ') || 'Support'}</h3>
-                    <p className="text-xs text-white/80">{selectedChatTicket.status === 'resolved' ? 'Ticket Closed' : 'We typically reply within 24h'}</p>
+                    <h3 className="font-medium text-lg capitalize">{selectedChatTicket.subject || selectedChatTicket.issueType?.replace('_', ' ') || 'Support'}</h3>
+                    <p className="text-sm text-white/80">{selectedChatTicket.status === 'resolved' ? 'Ticket Closed' : 'We typically reply within 24h'}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 md:gap-3">
@@ -640,7 +653,7 @@ export default function SupportPage() {
                       <div id={`msg-${reply._id}`} key={reply._id || idx} className={`flex flex-col group ${isMine ? 'items-end' : 'items-start'} px-2 relative`}>
                         <div 
                           onClick={() => !reply.isDeleted && setOpenDropdownId(openDropdownId === reply._id ? null : (reply._id ?? null))}
-                          className={`relative max-w-[85%] rounded-lg px-3 pt-2 pb-1.5 text-[14.5px] cursor-pointer active:bg-black/5 transition-colors ${isMine ? 'bg-[#d9fdd3] text-[#111b21] rounded-tr-none' : 'bg-white text-[#111b21] rounded-tl-none'}`}
+                          className={`relative max-w-[85%] rounded-lg px-3 pt-2 pb-1.5 text-base cursor-pointer active:bg-black/5 transition-colors ${isMine ? 'bg-[#d9fdd3] text-[#111b21] rounded-tr-none' : 'bg-white text-[#111b21] rounded-tl-none'}`}
                         >
                           
                           {/* Dropdown Chevron (WhatsApp style) */}
@@ -671,10 +684,10 @@ export default function SupportPage() {
                               onClick={(e) => { e.stopPropagation(); reply.quotedReplyId && scrollToMessage(reply.quotedReplyId); }}
                               className="bg-black/5 border-l-4 border-[#00a884] rounded p-2 mb-1 cursor-pointer"
                             >
-                              <div className="text-[11px] font-medium text-[#00a884]">
+                              <div className="text-xs font-medium text-[#00a884]">
                                 {quotedMsg.sender === 'user' || quotedMsg.senderRole === 'user' ? 'You' : 'Admin'}
                               </div>
-                              <div className="text-[12px] text-gray-600 truncate max-w-full">
+                              <div className="text-sm text-gray-600 truncate max-w-full">
                                 {quotedMsg.message}
                               </div>
                             </div>
@@ -683,7 +696,7 @@ export default function SupportPage() {
                           <div className={`pr-12 whitespace-pre-wrap leading-relaxed ${reply.isDeleted ? 'text-gray-400 italic' : ''}`}>
                             {reply.message}
                           </div>
-                          <div className="text-[10.5px] text-gray-500 flex justify-end items-center mt-1 float-right ml-2 -mb-0.5 gap-1">
+                          <div className="text-xs text-gray-500 flex justify-end items-center mt-1 float-right ml-2 -mb-0.5 gap-1">
                             {reply.isEdited && !reply.isDeleted && <span>Edited</span>}
                             <span>{new Date(reply.createdAt || '').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                             {isMine && (
@@ -711,10 +724,10 @@ export default function SupportPage() {
                   {(quotingReplyId || editingReplyId) && (
                     <div className="bg-[#f0f2f5] px-4 py-2 flex items-center justify-between border-b border-gray-200">
                       <div className="flex-1 bg-black/5 border-l-4 border-[#00a884] rounded p-2">
-                        <div className="text-[11px] font-medium text-[#00a884]">
+                        <div className="text-xs font-medium text-[#00a884]">
                           {editingReplyId ? 'Editing Message' : 'Replying to message'}
                         </div>
-                        <div className="text-[12px] text-gray-600 truncate max-w-md">
+                        <div className="text-sm text-gray-600 truncate max-w-md">
                           {editingReplyId ? replyMessage : getQuotedMessage(quotingReplyId!)?.message}
                         </div>
                       </div>
@@ -748,7 +761,7 @@ export default function SupportPage() {
                         }
                       }}
                       placeholder="Type a message..."
-                      className="flex-1 px-4 py-3 bg-white rounded-xl focus:outline-none resize-none min-h-[48px] text-[15px] custom-scrollbar"
+                      className="flex-1 px-4 py-3 bg-white rounded-xl focus:outline-none resize-none min-h-[48px] text-base custom-scrollbar"
                       style={{ height: '48px' }}
                     />
                     <button onMouseDown={e => e.preventDefault()} disabled={isReplying || !replyMessage.trim()} type="submit" className="w-12 h-12 flex-shrink-0 bg-[#00a884] rounded-full flex items-center justify-center text-white disabled:opacity-50 hover:bg-[#008f6f]">

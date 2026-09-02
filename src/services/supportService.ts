@@ -46,6 +46,7 @@ export const supportService = {
         return {
           ...t,
           subject: subj,
+          description: msg || "Support inquiry submitted to Admin",
           message: msg || "Support inquiry submitted to Admin",
         };
       });
