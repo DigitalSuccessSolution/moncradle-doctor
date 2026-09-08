@@ -6,7 +6,7 @@
 
 import { apiFetch, ApiResponse } from "./apiClient";
 import { API_CONFIG } from "@/config/api.config";
-import { NutritionPlan } from "@/data/mockData";
+import { NutritionPlan } from "@/types";
 
 export interface BackendNutritionPlan {
   _id?: string;

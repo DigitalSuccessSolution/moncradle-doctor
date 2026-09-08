@@ -6,7 +6,7 @@
 
 import { apiFetch, ApiResponse } from "./apiClient";
 import { API_CONFIG } from "@/config/api.config";
-import { Prescription } from "@/data/mockData";
+import { Prescription } from "@/types";
 
 export interface BackendPrescription {
   _id?: string;

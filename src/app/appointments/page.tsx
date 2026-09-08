@@ -85,7 +85,7 @@ export default function AppointmentsPage() {
           };
         });
         setLocalAppointments(list);
-        setTotalAppointmentsCount(res.total || list.length);
+        setTotalAppointmentsCount((res as any).total || list.length);
       }
     } catch (err) {
       console.warn("Failed to fetch live appointments:", err);

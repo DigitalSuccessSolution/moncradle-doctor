@@ -14,9 +14,19 @@ import {
 
 export interface GrowthCurveChartProps {
   records?: Array<any>;
+  chartType?: "weight" | "height" | "both" | "all";
+  currentWeight?: number;
+  currentHeight?: number;
+  ageInMonths?: number;
 }
 
-export default function GrowthCurveChart({ records = [] }: GrowthCurveChartProps) {
+export default function GrowthCurveChart({
+  records = [],
+  chartType,
+  currentWeight,
+  currentHeight,
+  ageInMonths,
+}: GrowthCurveChartProps) {
   // Process the records to format the date and prepare for recharts
   const chartData = useMemo(() => {
     return [...records]
@@ -35,8 +45,8 @@ export default function GrowthCurveChart({ records = [] }: GrowthCurveChartProps
 
         return {
           date: formattedDate,
-          weight: r.weight !== undefined ? Number(r.weight) : null,
-          height: r.height !== undefined ? Number(r.height) : null,
+          weight: r.weight !== undefined && r.weight !== null ? Number(r.weight) : null,
+          height: r.height !== undefined && r.height !== null ? Number(r.height) : null,
         };
       });
   }, [records]);
@@ -49,14 +59,9 @@ export default function GrowthCurveChart({ records = [] }: GrowthCurveChartProps
     );
   }
 
-  // Calculate dynamic domains with some padding to make the chart look nice
-  const minWeight = Math.min(...chartData.map((d) => d.weight || 0));
-  const maxWeight = Math.max(...chartData.map((d) => d.weight || 0));
-  const weightDomain = [Math.max(0, minWeight - 5), Math.ceil(maxWeight + 5)];
-
-  const minHeight = Math.min(...chartData.map((d) => d.height || 0));
-  const maxHeight = Math.max(...chartData.map((d) => d.height || 0));
-  const heightDomain = [Math.max(0, minHeight - 10), Math.ceil(maxHeight + 10)];
+  const showWeight = !chartType || chartType === "weight" || chartType === "both" || chartType === "all";
+  const showHeight = !chartType || chartType === "height" || chartType === "both" || chartType === "all";
+  const isDualAxis = showWeight && showHeight;
 
   return (
     <div className="w-full h-[350px]">
@@ -75,26 +80,39 @@ export default function GrowthCurveChart({ records = [] }: GrowthCurveChartProps
             dy={10}
           />
           
-          {/* Left Y-Axis for Weight */}
-          <YAxis 
-            yAxisId="left" 
-            orientation="left" 
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 12, fill: "#94a3b8" }}
-            dx={-10}
-            // Domain can be set dynamically if needed, or leave automatic
-          />
+          {/* Left Y-Axis */}
+          {showWeight && (
+            <YAxis 
+              yAxisId="left" 
+              orientation="left" 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: "#94a3b8" }}
+              dx={-10}
+            />
+          )}
+          {!showWeight && showHeight && (
+            <YAxis 
+              yAxisId="left" 
+              orientation="left" 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: "#94a3b8" }}
+              dx={-10}
+            />
+          )}
           
-          {/* Right Y-Axis for Height */}
-          <YAxis 
-            yAxisId="right" 
-            orientation="right" 
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 12, fill: "#94a3b8" }}
-            dx={10}
-          />
+          {/* Right Y-Axis for Height in dual mode */}
+          {isDualAxis && (
+            <YAxis 
+              yAxisId="right" 
+              orientation="right" 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: "#94a3b8" }}
+              dx={10}
+            />
+          )}
           
           <Tooltip 
             contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)' }}
@@ -109,28 +127,32 @@ export default function GrowthCurveChart({ records = [] }: GrowthCurveChartProps
           />
           
           {/* Weight Line */}
-          <Line 
-            yAxisId="left"
-            type="monotone" 
-            dataKey="weight" 
-            name="Weight (kg)" 
-            stroke="#20c997" 
-            strokeWidth={2}
-            activeDot={{ r: 6, fill: "#20c997", stroke: "#fff", strokeWidth: 2 }}
-            dot={{ r: 4, fill: "#fff", stroke: "#20c997", strokeWidth: 2 }}
-          />
+          {showWeight && (
+            <Line 
+              yAxisId="left"
+              type="monotone" 
+              dataKey="weight" 
+              name="Weight (kg)" 
+              stroke="#20c997" 
+              strokeWidth={2}
+              activeDot={{ r: 6, fill: "#20c997", stroke: "#fff", strokeWidth: 2 }}
+              dot={{ r: 4, fill: "#fff", stroke: "#20c997", strokeWidth: 2 }}
+            />
+          )}
           
           {/* Height Line */}
-          <Line 
-            yAxisId="right"
-            type="monotone" 
-            dataKey="height" 
-            name="Height (cm)" 
-            stroke="#339af0" 
-            strokeWidth={2}
-            activeDot={{ r: 6, fill: "#339af0", stroke: "#fff", strokeWidth: 2 }}
-            dot={{ r: 4, fill: "#fff", stroke: "#339af0", strokeWidth: 2 }}
-          />
+          {showHeight && (
+            <Line 
+              yAxisId={isDualAxis ? "right" : "left"}
+              type="monotone" 
+              dataKey="height" 
+              name="Height (cm)" 
+              stroke="#339af0" 
+              strokeWidth={2}
+              activeDot={{ r: 6, fill: "#339af0", stroke: "#fff", strokeWidth: 2 }}
+              dot={{ r: 4, fill: "#fff", stroke: "#339af0", strokeWidth: 2 }}
+            />
+          )}
         </LineChart>
       </ResponsiveContainer>
     </div>

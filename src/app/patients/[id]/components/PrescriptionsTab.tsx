@@ -1,7 +1,7 @@
 "use client";
 
 import { FileText, PlusCircle, Trash2, Plus, Edit3 } from "lucide-react";
-import { Patient } from "@/data/mockData";
+import { Patient } from "@/types";
 
 interface PrescriptionsTabProps {
   patient: Patient;

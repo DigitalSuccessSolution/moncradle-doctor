@@ -35,8 +35,8 @@ import {
   Search,
   AlertTriangle,
 } from "lucide-react";
+import { Patient, maskPhoneNumber } from "@/types";
 import { useDoctorData } from "@/context/DoctorDataContext";
-import { Patient, maskPhoneNumber } from "@/data/mockData";
 import { apiFetch } from "@/services/apiClient";
 import { babyService, transformBackendBabyToPatient } from "@/services/babyService";
 import { growthService, GrowthRecord } from "@/services/growthService";
@@ -59,7 +59,7 @@ export default function PatientProfilePage() {
   const patientId = params.id as string;
 
   const { patients, setSelectedPatientId, isDataLoading } = useDoctorData();
-  const contextPatient = patients.find((p) => p.id === patientId);
+  const contextPatient = patients?.find((p: Patient) => p.id === patientId);
 
   const [liveBaby, setLiveBaby] = useState<Patient | null>(null);
   const [showPrintModal, setShowPrintModal] = useState(false);
@@ -434,7 +434,7 @@ export default function PatientProfilePage() {
           medicalNotes: rxDiagNotes.trim(),
           nutritionRecommendations: rxNutrition.trim(),
           vitals: {
-            weight: rxWeight || `${patient.weight || 6.8} kg`,
+            weight: rxWeight || `${patient?.weight || 6.8} kg`,
             temperature: rxTemp || "98.6 F",
             bp: rxBP || "N/A"
           },
@@ -447,7 +447,7 @@ export default function PatientProfilePage() {
           medicalNotes: rxDiagNotes.trim(),
           nutritionRecommendations: rxNutrition.trim(),
           vitals: {
-            weight: rxWeight || `${patient.weight || 6.8} kg`,
+            weight: rxWeight || `${patient?.weight || 6.8} kg`,
             temperature: rxTemp || "98.6 F",
             bp: rxBP || "N/A"
           },

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { PlusCircle, Utensils, Search, Trash2, FileText, Save, CheckCircle2, X, Loader2, AlertTriangle } from "lucide-react";
-import { Patient } from "@/data/mockData";
+import { Patient } from "@/types";
 import { getPatientNutrientGoals, nutritionService } from "@/services/nutritionService";
 
 const DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];

@@ -1,7 +1,7 @@
 "use client";
 
 import { User, Phone, Mail, MapPin, HeartPulse } from "lucide-react";
-import { Patient, maskPhoneNumber } from "@/data/mockData";
+import { Patient, maskPhoneNumber } from "@/types";
 
 interface ProfileTabProps {
   patient: Patient;

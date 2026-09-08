@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { Scale, Trash2, Plus, X, Calendar, Activity } from "lucide-react";
-import { Patient } from "@/data/mockData";
+import { Activity, Plus, Trash2, X, Calendar, Scale } from "lucide-react";
+import { Patient } from "@/types";
 import { GrowthRecord } from "@/services/growthService";
 import GrowthCurveChart from "@/components/GrowthCurveChart";
 
@@ -73,19 +73,41 @@ export default function GrowthTab({
       <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
         {/* Chart Section */}
         <div className="p-6 border-b border-slate-100">
-          <h3 className="font-bold text-slate-700 text-sm mb-6">Growth Chart</h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-bold text-slate-700 text-sm">Growth Chart</h3>
+            <div className="flex bg-slate-100 p-1 rounded-lg text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setChartType("weight")}
+                className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                  chartType === "weight" ? "bg-white text-slate-800 shadow-xs font-bold" : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                Weight (kg)
+              </button>
+              <button
+                type="button"
+                onClick={() => setChartType("height")}
+                className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                  chartType === "height" ? "bg-white text-slate-800 shadow-xs font-bold" : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                Height (cm)
+              </button>
+            </div>
+          </div>
 
-      {/* WHO Growth Curve Chart */}
-      <div className="w-full">
-        <GrowthCurveChart
-          chartType={chartType}
-          currentWeight={patient.weight !== undefined ? Number(patient.weight) : undefined}
-          currentHeight={patient.height !== undefined ? Number(patient.height) : undefined}
-          ageInMonths={patient.ageInMonths !== undefined ? Number(patient.ageInMonths) : undefined}
-          records={growthRecords}
-        />
-      </div>
-      </div>
+          {/* WHO Growth Curve Chart */}
+          <div className="w-full">
+            <GrowthCurveChart
+              chartType={chartType}
+              currentWeight={patient.weight !== undefined ? Number(patient.weight) : undefined}
+              currentHeight={patient.height !== undefined ? Number(patient.height) : undefined}
+              ageInMonths={patient.ageInMonths !== undefined ? Number(patient.ageInMonths) : undefined}
+              records={growthRecords}
+            />
+          </div>
+        </div>
 
       {/* Table of previous growth logs */}
       <div className="p-0">

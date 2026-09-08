@@ -5,7 +5,7 @@
 
 import { apiFetch, ApiResponse } from "./apiClient";
 import { API_CONFIG } from "@/config/api.config";
-import { Patient } from "@/data/mockData";
+import { Patient } from "@/types";
 
 /**
  * Transforms raw backend Baby payload into frontend Patient model

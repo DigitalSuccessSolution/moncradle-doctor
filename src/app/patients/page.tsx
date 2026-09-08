@@ -16,8 +16,8 @@ import {
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
+import { Patient, maskPhoneNumber } from "@/types";
 import { useDoctorData } from "@/context/DoctorDataContext";
-import { maskPhoneNumber } from "@/data/mockData";
 
 const PARENT_AVATARS = [
   "/parent_avatar_1.png",
@@ -38,7 +38,7 @@ export default function PatientDirectory() {
     setCurrentPage(1);
   }, [searchTerm]);
 
-  const filteredPatients = patients.filter((patient) => {
+  const filteredPatients = (patients || []).filter((patient: Patient) => {
     const term = searchTerm.toLowerCase();
     return (
       patient.name.toLowerCase().includes(term) ||
@@ -102,7 +102,7 @@ export default function PatientDirectory() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {currentPatients.map((child) => (
+              {currentPatients.map((child: Patient) => (
                 <tr
                   key={child.id}
                   onClick={() => router.push(`/patients/${child.id}`)}
@@ -196,7 +196,7 @@ export default function PatientDirectory() {
 
         {/* MOBILE CARDS LIST VIEW */}
         <div className="block md:hidden divide-y divide-slate-100">
-          {currentPatients.map((child) => (
+          {currentPatients.map((child: Patient) => (
             <div
               key={child.id}
               onClick={() => router.push(`/patients/${child.id}`)}

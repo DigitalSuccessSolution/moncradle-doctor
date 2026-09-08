@@ -15,8 +15,7 @@ import {
   INITIAL_NOTES,
   INITIAL_NOTIFICATIONS,
   SAMPLE_NUTRITION_PLAN,
-  maskPhoneNumber,
-} from "@/data/mockData";
+} from "@/types";
 import { getStoredToken, setStoredToken } from "@/services/apiClient";
 import { authService } from "@/services/authService";
 import { babyService, transformBackendBabyToPatient } from "@/services/babyService";
@@ -126,7 +125,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
   const [notes, setNotes] = useState<MedicalNote[]>([]);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [selectedPatientId, setSelectedPatientId] = useState<string>("1");
+  const [selectedPatientId, setSelectedPatientId] = useState<string>("");
   const [doctorProfile, setDoctorProfile] = useState<DoctorProfile>(DEFAULT_DOCTOR_PROFILE);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [authToken, setAuthToken] = useState<string | null>(null);
@@ -137,13 +136,13 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
   const [showWelcomeScreen, setShowWelcomeScreen] = useState<boolean>(true);
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
   const [isDataLoading, setIsDataLoading] = useState<boolean>(true);
-  
+
   const router = useRouter();
 
   // Listen for foreground push notifications
   useEffect(() => {
     let unsubscribe: any;
-    
+
     if (isAuthenticated) {
       setupMessageListener((payload) => {
         const title = payload.notification?.title || "New Notification";
@@ -151,12 +150,12 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
           body: payload.notification?.body || "",
           icon: '/moncradle-icon.png',
         };
-        
+
         // Show native browser notification even when app is open
         if ('Notification' in window && Notification.permission === 'granted') {
           const notification = new Notification(title, options);
-          
-          notification.onclick = function() {
+
+          notification.onclick = function () {
             window.focus();
             if (payload.data?.url) {
               router.push(payload.data.url);
@@ -190,70 +189,17 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
         try {
           localStorage.setItem("moncradle_doctor_profile_complete", "true");
           localStorage.setItem("moncradle_doctor_approval_status", "pending");
-        } catch (e) {}
+        } catch (e) { }
       } else {
         try {
           localStorage.setItem("moncradle_doctor_profile_complete", "true");
           localStorage.setItem("moncradle_doctor_approval_status", "approved");
-        } catch (e) {}
+        } catch (e) { }
       }
     }
-    // Sync profile to backend API
-    authService.updateProfile(updated).catch(() => {});
   };
 
-  const [nutritionPlans, setNutritionPlans] = useState<Record<string, NutritionPlan>>({
-    "1": SAMPLE_NUTRITION_PLAN,
-    "2": {
-      patientId: "2",
-      targetCalories: 1400,
-      targetProtein: 45,
-      targetIron: 15,
-      targetAchievementPercent: 62,
-      focusText: "High calorie density and hydrolyzed protein support for rapid catch-up growth.",
-      focusImage: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=800",
-      meals: [
-        {
-          id: "m2-1",
-          meal: "Breakfast",
-          time: "07:30 AM",
-          title: "Hydrolyzed Formula & Rice Cereal",
-          description: "Warm formula with 1 tbsp iron-fortified rice cereal.",
-          tags: ["CATCH-UP", "IRON+"],
-          iconType: "sun",
-        },
-        {
-          id: "m2-2",
-          meal: "Lunch",
-          time: "12:00 PM",
-          title: "Mashed Avocado & Pumpkin Purée",
-          description: "High healthy fat blend for calorie density.",
-          tags: ["HEALTHY FATS", "EASY DIGEST"],
-          iconType: "utensils",
-        },
-      ],
-    },
-    "3": {
-      patientId: "3",
-      targetCalories: 2100,
-      targetProtein: 75,
-      targetIron: 14,
-      targetAchievementPercent: 92,
-      focusText: "Active growth phase diet with varied vegetables and legume proteins.",
-      focusImage: "https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&q=80&w=800",
-      meals: [
-        {
-          id: "m3-1",
-          meal: "Breakfast",
-          time: "08:00 AM",
-          title: "Banana & Oat Smoothie",
-          description: "Whole milk blend with oats and chia seeds.",
-          tags: ["PROTEIN", "ENERGY"],
-          iconType: "sun",
-        },
-      ],
-    },
-  });
+  const [nutritionPlans, setNutritionPlans] = useState<Record<string, NutritionPlan>>({});
 
   // Hydrate from localStorage on client side
   useEffect(() => {
@@ -297,27 +243,38 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
             setApprovalStatus(isApproved ? "approved" : "pending");
             try {
               localStorage.setItem("moncradle_doctor_approval_status", isApproved ? "approved" : "pending");
-            } catch (e) {}
+            } catch (e) { }
 
-            updateDoctorProfile({
-              fullName: user?.name || doctorProfile.fullName,
-              email: user?.email || doctorProfile.email,
-              phone: user?.phone || doctorProfile.phone,
-              avatar: user?.avatar || doctorProfile.avatar,
-              specialization: profile?.specialization || doctorProfile.specialization,
-              licenseNumber: profile?.registrationNumber || doctorProfile.licenseNumber,
-              hospital: profile?.clinicName || doctorProfile.hospital,
-              clinicAddress: profile?.clinicAddress || doctorProfile.clinicAddress,
-              experience: profile?.experienceYears ? `${profile.experienceYears} Years` : doctorProfile.experience,
-              consultationFee: profile?.consultationFee || doctorProfile.consultationFee,
-              degrees: profile?.degrees || doctorProfile.degrees,
-              qualifications: profile?.qualifications || doctorProfile.qualifications,
-              languagesSpoken: profile?.languagesSpoken || doctorProfile.languagesSpoken,
-              bankDetails: profile?.bankDetails || doctorProfile.bankDetails,
-              about: profile?.about || doctorProfile.about,
-              availability: profile?.availability || doctorProfile.availability,
-            });
-            
+            const newDocProfile: DoctorProfile = {
+              fullName: user?.name || "",
+              email: user?.email || "",
+              phone: user?.phone || "",
+              avatar: user?.avatar || "/doctor_female.png",
+              gender: user?.gender || profile?.gender || "Female",
+              title: (profile?.degrees && profile.degrees.length > 0) ? profile.degrees.join(", ") : (profile?.specialization || ""),
+              specialization: profile?.specialization || "",
+              licenseNumber: profile?.registrationNumber || "",
+              hospital: profile?.clinicName || "",
+              clinicAddress: profile?.clinicAddress || "",
+              city: profile?.city || "",
+              state: profile?.state || "",
+              pincode: profile?.pincode || "",
+              experience: profile?.experienceYears !== undefined && profile?.experienceYears !== null ? String(profile.experienceYears) : "",
+              consultationFee: profile?.consultationFee || 0,
+              degrees: profile?.degrees || [],
+              qualifications: profile?.qualifications || [],
+              languagesSpoken: profile?.languagesSpoken || [],
+              bankDetails: profile?.bankDetails || {},
+              about: profile?.about || "",
+              bio: profile?.about || "",
+              availableDays: "Mon - Sat",
+              availableHours: "09:00 AM - 05:00 PM",
+              availability: profile?.availability || DEFAULT_DOCTOR_PROFILE.availability,
+            };
+
+            setDoctorProfile(newDocProfile);
+            saveToStorage("moncradle_doctor_profile", newDocProfile);
+
             // Prompt for notification permission automatically on load
             if ('Notification' in window) {
               requestForToken().then(fcmToken => {
@@ -327,7 +284,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
               }).catch(console.error);
             }
           }
-        }).catch(() => {});
+        }).catch(() => { });
 
         // Fetch real patients/babies from backend API GET /api/babies
         babyService.fetchBabies().then((res: any) => {
@@ -336,7 +293,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
             setPatients(apiPatients);
             saveToStorage("moncradle_doctor_patients", apiPatients);
           }
-        }).catch(() => {});
+        }).catch(() => { });
 
         // Fetch real appointments from backend API GET /api/appointments
         appointmentService.fetchAppointments().then((res: any) => {
@@ -345,7 +302,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
             setAppointments(apiAppointments);
             saveToStorage("moncradle_doctor_apts", apiAppointments);
           }
-        }).catch(() => {});
+        }).catch(() => { });
 
         // Fetch real prescriptions from backend API GET /api/prescriptions
         prescriptionService.getAllPrescriptions().then((res: any) => {
@@ -354,7 +311,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
             setPrescriptions(apiRx);
             saveToStorage("moncradle_doctor_rx", apiRx);
           }
-        }).catch(() => {});
+        }).catch(() => { });
 
         // Fetch real nutrition plans from backend API GET /api/nutrition-plans
         nutritionService.getAllNutritionPlans().then((res: any) => {
@@ -370,7 +327,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
               setNutritionPlans((prev) => ({ ...prev, ...plansMap }));
             }
           }
-        }).catch(() => {});
+        }).catch(() => { });
       } else {
         const storedAuth = localStorage.getItem("moncradle_doctor_auth");
         if (storedAuth === "true") setIsAuthenticated(true);
@@ -423,7 +380,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
       try {
         localStorage.setItem("moncradle_doctor_profile_complete", "false");
         localStorage.setItem("moncradle_doctor_approval_status", "pending");
-      } catch (e) {}
+      } catch (e) { }
     } else {
       const vStatus = userData?.verificationStatus || userData?.approvalStatus || "pending";
       const isApproved = vStatus === "approved" || vStatus === "verified";
@@ -432,12 +389,50 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
       try {
         localStorage.setItem("moncradle_doctor_profile_complete", "true");
         localStorage.setItem("moncradle_doctor_approval_status", isApproved ? "approved" : "pending");
-      } catch (e) {}
+      } catch (e) { }
     }
 
-    try {
-      localStorage.setItem("moncradle_doctor_auth", "true");
-    } catch (e) {}
+    // Fetch full doctor profile from backend after login
+    authService.fetchProfile().then((res: any) => {
+      if (res.success || res.user || res.profile) {
+        const user = res.user || res.data?.user;
+        const profile = res.profile || res.data?.profile || res.data;
+
+        const vStatus = profile?.verificationStatus || user?.verificationStatus || user?.approvalStatus;
+        const isApproved = vStatus === "approved" || vStatus === "verified";
+        setApprovalStatus(isApproved ? "approved" : "pending");
+
+        const fetchedProfile: DoctorProfile = {
+          fullName: user?.name || userData?.name || doctorProfile.fullName || "",
+          email: user?.email || userData?.email || doctorProfile.email || "",
+          phone: user?.phone || userData?.phone || mobileOrEmail || doctorProfile.phone || "",
+          avatar: user?.avatar || userData?.avatar || doctorProfile.avatar || "/doctor_female.png",
+          gender: user?.gender || userData?.gender || profile?.gender || doctorProfile.gender || "Female",
+          title: (profile?.degrees && profile.degrees.length > 0) ? profile.degrees.join(", ") : (profile?.specialization || ""),
+          specialization: profile?.specialization || userData?.specialization || doctorProfile.specialization || "",
+          licenseNumber: profile?.registrationNumber || doctorProfile.licenseNumber || "",
+          hospital: profile?.clinicName || userData?.hospital || doctorProfile.hospital || "",
+          clinicAddress: profile?.clinicAddress || doctorProfile.clinicAddress || "",
+          city: profile?.city || doctorProfile.city || "",
+          state: profile?.state || doctorProfile.state || "",
+          pincode: profile?.pincode || doctorProfile.pincode || "",
+          experience: profile?.experienceYears !== undefined && profile?.experienceYears !== null ? String(profile.experienceYears) : (doctorProfile.experience || ""),
+          consultationFee: profile?.consultationFee || doctorProfile.consultationFee || 0,
+          degrees: profile?.degrees || doctorProfile.degrees || [],
+          qualifications: profile?.qualifications || doctorProfile.qualifications || [],
+          languagesSpoken: profile?.languagesSpoken || doctorProfile.languagesSpoken || [],
+          bankDetails: profile?.bankDetails || doctorProfile.bankDetails || {},
+          about: profile?.about || doctorProfile.about || "",
+          bio: profile?.about || doctorProfile.about || "",
+          availableDays: "Mon - Sat",
+          availableHours: "09:00 AM - 05:00 PM",
+          availability: profile?.availability || DEFAULT_DOCTOR_PROFILE.availability,
+        };
+
+        setDoctorProfile(fetchedProfile);
+        saveToStorage("moncradle_doctor_profile", fetchedProfile);
+      }
+    }).catch(() => { });
 
     // Fetch babies from backend API GET /api/babies after login
     babyService.fetchBabies().then((res: any) => {
@@ -446,7 +441,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
         setPatients(apiPatients);
         saveToStorage("moncradle_doctor_patients", apiPatients);
       }
-    }).catch(() => {});
+    }).catch(() => { });
 
     // Fetch appointments from backend API GET /api/appointments after login
     appointmentService.fetchAppointments().then((res: any) => {
@@ -455,8 +450,8 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
         setAppointments(apiAppointments);
         saveToStorage("moncradle_doctor_apts", apiAppointments);
       }
-    }).catch(() => {});
-    
+    }).catch(() => { });
+
     // Prompt for notification permission automatically after login
     if ('Notification' in window) {
       requestForToken().then(fcmToken => {
@@ -477,7 +472,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
       localStorage.setItem("moncradle_doctor_auth", "false");
       localStorage.removeItem("moncradle_doctor_profile_complete");
       sessionStorage.removeItem("moncradle_doctor_welcome_done");
-    } catch (e) {}
+    } catch (e) { }
     window.location.href = "/";
   };
 
@@ -621,7 +616,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
       })),
       vitals: data.vitals,
       nextVisitDate: data.nextVisitDate,
-    }).catch(() => {});
+    }).catch(() => { });
 
     return newRx;
   };
@@ -659,7 +654,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
       weeklySchedule: nextPlan.meals?.map((m, idx) => ({
         day: VALID_DAYS.includes(m.meal) ? m.meal : VALID_DAYS[idx % 7],
       })),
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   const updateAppointmentStatus = (id: string, status: Appointment["status"]) => {
@@ -669,7 +664,7 @@ export function DoctorDataProvider({ children }: { children: React.ReactNode }) 
 
     // Sync status to backend API PATCH /api/appointments/:id/status
     const backendStatus = status === "Completed" ? "completed" : status === "Cancelled" ? "cancelled" : "scheduled";
-    appointmentService.updateStatus(id, backendStatus).catch(() => {});
+    appointmentService.updateStatus(id, backendStatus).catch(() => { });
   };
 
   const addNotification = (notif: Omit<NotificationItem, "id">) => {

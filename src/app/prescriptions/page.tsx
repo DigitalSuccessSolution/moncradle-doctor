@@ -10,8 +10,8 @@ import {
   ChevronLeft,
   FileText,
 } from "lucide-react";
+import { maskPhoneNumber, Patient } from "@/types";
 import { useDoctorData } from "@/context/DoctorDataContext";
-import { maskPhoneNumber } from "@/data/mockData";
 
 export default function PrescriptionsPage() {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function PrescriptionsPage() {
     setCurrentPage(1);
   }, [searchTerm]);
 
-  const filteredPatients = patients.filter((patient) => {
+  const filteredPatients = patients.filter((patient: Patient) => {
     const term = searchTerm.toLowerCase();
     return (
       patient.name.toLowerCase().includes(term) ||
@@ -82,7 +82,7 @@ export default function PrescriptionsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {currentPatients.map((child) => (
+              {currentPatients.map((child: Patient) => (
                 <tr 
                   key={child.id} 
                   onClick={() => router.push(`/patients/${child.id}?tab=prescriptions`)}
@@ -167,7 +167,7 @@ export default function PrescriptionsPage() {
 
         {/* MOBILE CARDS LIST VIEW */}
         <div className="block md:hidden divide-y divide-slate-100">
-          {currentPatients.map((child) => (
+          {currentPatients.map((child: Patient) => (
             <div 
               key={child.id} 
               onClick={() => router.push(`/patients/${child.id}?tab=prescriptions`)}

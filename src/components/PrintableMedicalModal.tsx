@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { X, Printer, Download, CheckCircle, HeartPulse, FileText } from "lucide-react";
-import { Patient, PrescriptionItem } from "@/data/mockData";
+import { CheckCircle, Printer, X } from "lucide-react";
+import { Patient, PrescriptionItem } from "@/types";
 import { useDoctorData } from "@/context/DoctorDataContext";
 
 interface PrintableMedicalModalProps {
