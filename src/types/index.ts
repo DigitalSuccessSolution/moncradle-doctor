@@ -40,6 +40,7 @@ export interface DoctorProfile {
   availableDays: string;
   availableHours: string;
   consultationFee?: number;
+  slotDuration?: number;
   clinicAddress?: string;
   city?: string;
   state?: string;
@@ -75,14 +76,7 @@ export const DEFAULT_DOCTOR_PROFILE: DoctorProfile = {
   city: "",
   state: "",
   pincode: "",
-  availability: [
-    { dayOfWeek: "Monday", shifts: [{ startTime: "09:00", endTime: "17:00" }] },
-    { dayOfWeek: "Tuesday", shifts: [{ startTime: "09:00", endTime: "17:00" }] },
-    { dayOfWeek: "Wednesday", shifts: [{ startTime: "09:00", endTime: "17:00" }] },
-    { dayOfWeek: "Thursday", shifts: [{ startTime: "09:00", endTime: "17:00" }] },
-    { dayOfWeek: "Friday", shifts: [{ startTime: "09:00", endTime: "17:00" }] },
-    { dayOfWeek: "Saturday", shifts: [{ startTime: "09:00", endTime: "13:00" }] }
-  ]
+  availability: []
 };
 
 export interface Patient {

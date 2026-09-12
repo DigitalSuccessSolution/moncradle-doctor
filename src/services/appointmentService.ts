@@ -49,7 +49,7 @@ export const appointmentService = {
    * Fetch appointments list from backend
    * GET /api/appointments
    */
-  async fetchAppointments(params?: { page?: number; limit?: number; search?: string; status_in?: string[] }): Promise<ApiResponse<any>> {
+  async fetchAppointments(params?: { page?: number; limit?: number; search?: string; status_in?: string[]; date?: string }): Promise<ApiResponse<any>> {
     let url = API_CONFIG.ENDPOINTS.APPOINTMENTS.LIST;
     
     if (params) {
@@ -57,6 +57,7 @@ export const appointmentService = {
       if (params.page) searchParams.append("page", params.page.toString());
       if (params.limit) searchParams.append("limit", params.limit.toString());
       if (params.search) searchParams.append("search", params.search);
+      if (params.date) searchParams.append("date", params.date);
       
       // Handle multiple statuses like ?status[in]=completed&status[in]=cancelled
       if (params.status_in && params.status_in.length > 0) {

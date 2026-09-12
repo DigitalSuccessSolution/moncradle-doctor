@@ -168,27 +168,46 @@ export default function ProfilePage() {
 
             {/* Profile Completion Bar */}
             <div className="pt-3 border-t border-white/10">
-              {isProfileComplete ? (
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between text-[11px] font-semibold">
-                    <span className="text-[#34C759] flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> Profile Complete</span>
-                    <span className="text-white">100%</span>
+              {(() => {
+                const fieldsToCheck = [
+                  doctorProfile.fullName,
+                  doctorProfile.email,
+                  doctorProfile.phone,
+                  doctorProfile.specialization,
+                  doctorProfile.licenseNumber,
+                  doctorProfile.hospital,
+                  doctorProfile.clinicAddress,
+                  doctorProfile.city,
+                  doctorProfile.experience,
+                  doctorProfile.consultationFee,
+                  doctorProfile.about,
+                ];
+                const filled = fieldsToCheck.filter(f => f && String(f).trim() !== '' && f !== 0).length;
+                const percent = Math.round((filled / fieldsToCheck.length) * 100);
+                const isComplete = percent === 100;
+
+                return isComplete ? (
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between text-[11px] font-semibold">
+                      <span className="text-[#34C759] flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> Profile Complete</span>
+                      <span className="text-white">100%</span>
+                    </div>
+                    <div className="w-full bg-white/10 rounded-full h-1.5">
+                      <div className="bg-[#34C759] h-1.5 rounded-full w-full"></div>
+                    </div>
                   </div>
-                  <div className="w-full bg-white/10 rounded-full h-1.5">
-                    <div className="bg-[#34C759] h-1.5 rounded-full w-full"></div>
+                ) : (
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between text-[11px] font-semibold">
+                      <span className="text-amber-400 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" /> Profile Incomplete</span>
+                      <span className="text-white">{percent}%</span>
+                    </div>
+                    <div className="w-full bg-white/10 rounded-full h-1.5">
+                      <div className="bg-amber-400 h-1.5 rounded-full transition-all duration-500" style={{ width: `${percent}%` }}></div>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between text-[11px] font-semibold">
-                    <span className="text-amber-400 flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" /> Profile Incomplete</span>
-                    <span className="text-white">Action Required</span>
-                  </div>
-                  <div className="w-full bg-white/10 rounded-full h-1.5">
-                    <div className="bg-amber-400 h-1.5 rounded-full w-1/2"></div>
-                  </div>
-                </div>
-              )}
+                );
+              })()}
             </div>
           </div>
         )}

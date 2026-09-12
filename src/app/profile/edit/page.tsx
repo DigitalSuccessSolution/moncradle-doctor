@@ -44,7 +44,7 @@ const STEPS = [
   { id: 5, title: "Bio & Summary", icon: FileText, subtitle: "Clinical bio & overview" },
 ];
 
-export const INDIAN_STATES = [
+const INDIAN_STATES = [
   "Andhra Pradesh",
   "Arunachal Pradesh",
   "Assam",

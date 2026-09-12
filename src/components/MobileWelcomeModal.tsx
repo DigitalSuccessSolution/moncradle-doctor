@@ -108,17 +108,11 @@ export default function MobileWelcomeModal() {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Top Bar: Step Counter & Skip Button */}
-        <div className="absolute top-4 inset-x-4 z-30 flex items-center justify-between">
+        {/* Top Bar: Step Counter */}
+        <div className="absolute top-4 inset-x-4 z-30 flex items-center justify-start">
           <span className="bg-slate-900/50 backdrop-blur-md text-white font-semibold text-[11px] px-3.5 py-1 rounded-full border border-white/20 shadow-xs">
             Step {currentSlide + 1} of {onboardingSlides.length}
           </span>
-          <button
-            onClick={() => setShowLoginModal(true)}
-            className="bg-white/90 backdrop-blur-md hover:bg-white text-slate-700 font-semibold text-xs px-4 py-1.5 rounded-full border border-slate-200 shadow-sm transition-all cursor-pointer"
-          >
-            Skip
-          </button>
         </div>
 
         {/* Top Doctor Image Container */}
